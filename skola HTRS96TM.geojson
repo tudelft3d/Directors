@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "skola HTRS96TM",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:EPSG::3765" } },
+"features": [
+{ "type": "Feature", "properties": { "full_id": "w310505224", "osm_id": "310505224", "osm_type": "way", "building": "school", "layer": null, "power": null, "type": null, "website": null, "shop": null, "phone": null, "opening_ho": null, "fax": null, "email": null, "building_l": null, "addr_city": null, "addr_postc": null, "religion": null, "denominati": null, "amenity": null, "sport": null, "name": null, "club": null, "roof_mater": null, "building_h": null, "addr_stree": null, "addr_house": null, "roof_shape": null, "height": null, "roof_level": null, "building_1": null }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ 454485.05616363248555, 5072314.331570893526077 ], [ 454489.753119904198684, 5072323.977632181718946 ], [ 454530.057856687810272, 5072304.510633734986186 ], [ 454517.127090557012707, 5072277.897861025296152 ], [ 454494.549489563971292, 5072288.799443760886788 ], [ 454495.212416275229771, 5072294.385026719421148 ], [ 454452.493010168545879, 5072299.465957598760724 ], [ 454452.302213455317542, 5072297.833570007234812 ], [ 454436.943647822772618, 5072299.646623513661325 ], [ 454438.815662603476085, 5072315.303907862864435 ], [ 454443.235447368293535, 5072326.374583471566439 ], [ 454484.314157916116528, 5072321.305602136068046 ], [ 454483.47138500364963, 5072314.521004726178944 ], [ 454485.05616363248555, 5072314.331570893526077 ] ] ] ] } }
+]
+}

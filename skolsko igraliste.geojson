@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "skolsko igraliste",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "full_id": null, "osm_id": null, "osm_type": null, "building": null, "layer": null, "power": null, "type": null, "website": null, "shop": null, "phone": null, "opening_ho": null, "fax": null, "email": null, "building_l": null, "addr_city": null, "addr_postc": null, "religion": null, "denominati": null, "amenity": null, "sport": null, "name": null, "club": null, "roof_mater": null, "building_h": null, "addr_stree": null, "addr_house": null, "roof_shape": null, "height": null, "roof_level": null, "building_1": null }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ 15.915255279116431, 45.789091328547208 ], [ 15.91563966557424, 45.788970411144142 ], [ 15.915354988385566, 45.788536113975162 ], [ 15.9149734920515, 45.788660055275642 ], [ 15.915255279116431, 45.789091328547208 ] ] ] ] } }
+]
+}
