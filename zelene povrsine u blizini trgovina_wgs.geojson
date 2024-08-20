@@ -1,0 +1,537 @@
+{
+  "type": "FeatureCollection",
+  "name": "zelene povrsine u blizini trgovina",
+  "crs": {
+    "type": "name",
+    "properties": {
+      "name": "urn:ogc:def:crs:EPSG::3765"
+    }
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "way/310505212",
+        "@id": "way/310505212",
+        "golf": null,
+        "landuse": "grass",
+        "type": null,
+        "wetland": null,
+        "name": null,
+        "leisure": null,
+        "barrier": null,
+        "dog": null,
+        "@relations": null,
+        "private": null,
+        "layer": null
+      },
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          [
+            [
+              [
+                15.9135592,
+                45.7896144
+              ],
+              [
+                15.913093100000001,
+                45.78971310000001
+              ],
+              [
+                15.9131204,
+                45.7898144
+              ],
+              [
+                15.9135721,
+                45.789719899999994
+              ],
+              [
+                15.9135592,
+                45.7896144
+              ]
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "way/310505214",
+        "@id": "way/310505214",
+        "golf": null,
+        "landuse": "grass",
+        "type": null,
+        "wetland": null,
+        "name": null,
+        "leisure": null,
+        "barrier": null,
+        "dog": null,
+        "@relations": null,
+        "private": null,
+        "layer": null
+      },
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          [
+            [
+              [
+                15.9160238,
+                45.7888949
+              ],
+              [
+                15.9160854,
+                45.78898889999999
+              ],
+              [
+                15.916281900000001,
+                45.7889264
+              ],
+              [
+                15.916220399999998,
+                45.7888324
+              ],
+              [
+                15.9160238,
+                45.7888949
+              ]
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "way/310505216",
+        "@id": "way/310505216",
+        "golf": null,
+        "landuse": "grass",
+        "type": null,
+        "wetland": null,
+        "name": null,
+        "leisure": null,
+        "barrier": null,
+        "dog": null,
+        "@relations": null,
+        "private": null,
+        "layer": null
+      },
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          [
+            [
+              [
+                15.915831799999998,
+                45.7889541
+              ],
+              [
+                15.9154827,
+                45.78906599999999
+              ],
+              [
+                15.9155445,
+                45.789163200000004
+              ],
+              [
+                15.9158943,
+                45.78905089999999
+              ],
+              [
+                15.915831799999998,
+                45.7889541
+              ]
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "way/310505218",
+        "@id": "way/310505218",
+        "golf": null,
+        "landuse": "grass",
+        "type": null,
+        "wetland": null,
+        "name": null,
+        "leisure": null,
+        "barrier": null,
+        "dog": null,
+        "@relations": null,
+        "private": null,
+        "layer": null
+      },
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          [
+            [
+              [
+                15.916325700000002,
+                45.7888004
+              ],
+              [
+                15.916385300000002,
+                45.788890800000004
+              ],
+              [
+                15.9166289,
+                45.7888155
+              ],
+              [
+                15.9165542,
+                45.78872569999999
+              ],
+              [
+                15.916325700000002,
+                45.7888004
+              ]
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "way/310505219",
+        "@id": "way/310505219",
+        "golf": null,
+        "landuse": "grass",
+        "type": null,
+        "wetland": null,
+        "name": null,
+        "leisure": null,
+        "barrier": null,
+        "dog": null,
+        "@relations": null,
+        "private": null,
+        "layer": null
+      },
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          [
+            [
+              [
+                15.9146967,
+                45.7894357
+              ],
+              [
+                15.9146343,
+                45.78933969999999
+              ],
+              [
+                15.914574799999999,
+                45.7893586
+              ],
+              [
+                15.914620600000001,
+                45.7894571
+              ],
+              [
+                15.9146967,
+                45.7894357
+              ]
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "way/1066669048",
+        "@id": "way/1066669048",
+        "golf": null,
+        "landuse": "grass",
+        "type": null,
+        "wetland": null,
+        "name": null,
+        "leisure": null,
+        "barrier": null,
+        "dog": null,
+        "@relations": null,
+        "private": null,
+        "layer": null
+      },
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          [
+            [
+              [
+                15.9113331,
+                45.7899504
+              ],
+              [
+                15.911089300000002,
+                45.78998119999999
+              ],
+              [
+                15.9111158,
+                45.7900831
+              ],
+              [
+                15.9113596,
+                45.790052300000006
+              ],
+              [
+                15.9113331,
+                45.7899504
+              ]
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "way/1066669049",
+        "@id": "way/1066669049",
+        "golf": null,
+        "landuse": "grass",
+        "type": null,
+        "wetland": null,
+        "name": null,
+        "leisure": null,
+        "barrier": null,
+        "dog": null,
+        "@relations": null,
+        "private": null,
+        "layer": null
+      },
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          [
+            [
+              [
+                15.9115727,
+                45.7900236
+              ],
+              [
+                15.9118423,
+                45.789987799999984
+              ],
+              [
+                15.9118177,
+                45.789885700000006
+              ],
+              [
+                15.9115451,
+                45.789922999999995
+              ],
+              [
+                15.9115727,
+                45.7900236
+              ]
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "way/1066669060",
+        "@id": "way/1066669060",
+        "golf": null,
+        "landuse": "grass",
+        "type": null,
+        "wetland": null,
+        "name": null,
+        "leisure": null,
+        "barrier": null,
+        "dog": null,
+        "@relations": null,
+        "private": null,
+        "layer": null
+      },
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          [
+            [
+              [
+                15.914278900000001,
+                45.7895608
+              ],
+              [
+                15.914349300000001,
+                45.78954170000001
+              ],
+              [
+                15.9143553,
+                45.78953279999999
+              ],
+              [
+                15.9143124,
+                45.789445799999996
+              ],
+              [
+                15.914303699999998,
+                45.78944299999999
+              ],
+              [
+                15.914234600000002,
+                45.7894584
+              ],
+              [
+                15.914278900000001,
+                45.7895608
+              ]
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "way/1066669061",
+        "@id": "way/1066669061",
+        "golf": null,
+        "landuse": "grass",
+        "type": null,
+        "wetland": null,
+        "name": null,
+        "leisure": null,
+        "barrier": null,
+        "dog": null,
+        "@relations": null,
+        "private": null,
+        "layer": null
+      },
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          [
+            [
+              [
+                15.9147179,
+                45.789428
+              ],
+              [
+                15.915034400000001,
+                45.78932600000001
+              ],
+              [
+                15.9149722,
+                45.7892322
+              ],
+              [
+                15.914655800000002,
+                45.7893342
+              ],
+              [
+                15.9147179,
+                45.789428
+              ]
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "way/1066669062",
+        "@id": "way/1066669062",
+        "golf": null,
+        "landuse": "grass",
+        "type": null,
+        "wetland": null,
+        "name": null,
+        "leisure": null,
+        "barrier": null,
+        "dog": null,
+        "@relations": null,
+        "private": null,
+        "layer": null
+      },
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          [
+            [
+              [
+                15.915058400000001,
+                45.7893175
+              ],
+              [
+                15.915209600000003,
+                45.7892705
+              ],
+              [
+                15.9151503,
+                45.789177499999994
+              ],
+              [
+                15.914999000000002,
+                45.7892245
+              ],
+              [
+                15.915058400000001,
+                45.7893175
+              ]
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "way/1066669063",
+        "@id": "way/1066669063",
+        "golf": null,
+        "landuse": "grass",
+        "type": null,
+        "wetland": null,
+        "name": null,
+        "leisure": null,
+        "barrier": null,
+        "dog": null,
+        "@relations": null,
+        "private": null,
+        "layer": null
+      },
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          [
+            [
+              [
+                15.9152351,
+                45.78926190000001
+              ],
+              [
+                15.915337800000001,
+                45.7892281
+              ],
+              [
+                15.915274900000002,
+                45.789135099999996
+              ],
+              [
+                15.9151722,
+                45.789168800000006
+              ],
+              [
+                15.9152351,
+                45.78926190000001
+              ]
+            ]
+          ]
+        ]
+      }
+    }
+  ]
+}
