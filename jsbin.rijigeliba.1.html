@@ -1,0 +1,1449 @@
+<!DOCTYPE html>
+<!--
+Created using JS Bin
+http://jsbin.com
+
+Copyright (c) 2024 by anonymous (http://jsbin.com/rijigeliba/1/edit)
+
+Released under the MIT license: http://jsbin.mit-license.org
+-->
+<meta name="robots" content="noindex">
+<html lang="nl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stadskaart Viewer met Meet-, Teller- en Hintgereedschap - Delft</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet">
+<style id="jsbin-css">
+body { 
+    font-family: 'Comic Neue', sans-serif;
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #33ccff, #6699ff); /* Light blue to mid-blue gradient */
+}
+
+h1 {
+    color: #0073e6; /* Dark blue */
+    font-size: 36px;
+    text-shadow: 2px 2px #99ccff; /* Lighter blue shadow */
+    margin-bottom: 20px;
+}
+
+.container {
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    max-width: 400px;
+    width: 100%;
+    border: 3px solid #0073e6; /* Dark blue */
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+label {
+    font-size: 18px;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+input {
+    padding: 15px;
+    margin-bottom: 15px;
+    border: 2px solid #99ccff; /* Light blue */
+    border-radius: 10px;
+    width: 200px;
+    font-size: 18px;
+    background-color: #f0f8ff; /* Very light blue */
+    color: #333;
+    text-align: center;
+    transition: border-color 0.3s ease;
+}
+
+input:focus {
+    border-color: #0073e6; /* Dark blue */
+    outline: none;
+}
+
+button {
+    padding: 12px 25px;
+    background-color: #0073e6; /* Dark blue */
+    color: white;
+    border: none;
+    border-radius: 15px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+}
+
+button:hover {
+    background-color: #005bb5; /* Slightly darker blue */
+    transform: scale(1.05);
+}
+
+#errorMessage {
+    color: #ff3333; /* Red for error messages */
+    font-size: 16px;
+    margin-top: 20px;
+    display: none;
+}
+
+#map {
+    height: 100vh;
+    width: 100vw;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 0;
+    display: none;
+}
+
+#toolbox {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    z-index: 1000;
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 15px;
+    padding: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+#toolboxIcon {
+    width: 34px;
+    height: 34px;
+    margin-right: 8px;
+}
+
+#toolboxContent {
+    font-family: 'Comic Neue', handwriting;
+    font-size: 16px;
+    color: #333;
+    display: none;
+    margin-left: 10px;
+    flex-direction: column;
+    align-items: center; /* Center-align items horizontally */
+    text-align: center;
+    margin-top: 5px;/* Center text alignment */
+}
+
+#toolbox:hover #toolboxContent {
+    display: flex;
+}
+
+#toolboxContent button {
+    font-family: 'Comic Neue', sans-serif;
+    font-size: 16px;
+    color: #333;
+    background-color: #e6f2ff; /* Very light blue */
+    border: none;
+    border-radius: 4px;
+    padding: 8px;
+    cursor: pointer;
+    margin: 5px 0;
+    width: 100%;
+    text-align: left;
+}
+
+#toolboxContent button:hover {
+    background-color: #004080; /* Darker blue */
+    color: white;
+}
+
+#toolboxHeader {
+    font-family: 'Comic Neue', sans-serif;
+    display: flex;
+    align-items: center; /* Vertically center the content inside the header */
+    justify-content: center; /* Horizontally center the content */
+}
+
+
+#message {
+    position: fixed;
+    bottom: 170px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 10px;
+    border-radius: 4px;
+    display: none;
+    z-index: 9999;
+    font-size: 14px;
+}
+
+#counterSection {
+    position: fixed;
+    top: 200px;
+    right: 20px;
+    z-index: 2000;
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    display: none;
+    width: 150px;
+}
+
+#treeCounter {
+    font-size: 18px;
+    font-weight: bold;
+    color: #007bff; /* Bright blue */
+}
+
+#resetCounterButton {
+    margin-top: 10px;
+    background-color: #0066cc; /* Darker blue */
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    width: 100%;
+}
+
+#resetCounterButton:hover {
+    background-color: #0055b3; /* Even darker blue */
+}
+
+.clue-section {
+    display: none;
+    position: absolute;
+    z-index: 1;
+    bottom: 20px;
+    width: 100%;
+    text-align: center;
+    padding: 10px;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    border: 2px solid rgba(0, 102, 204, 0.7); /* Slightly transparent dark blue */
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.3);
+    margin-bottom: 40px;
+}
+
+.clue-numbers {
+    display: flex;
+    justify-content: center;
+}
+
+.clue-btn {
+    width: 40px;
+    height: 40px;
+    background-color: #0066cc; /* Dark blue */
+    border: none;
+    border-radius: 50%;
+    color: white;
+    font-size: 18px;
+    margin: 0 10px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.clue-btn:hover {
+    background-color: #0055b3; /* Darker blue */
+}
+
+.clue-display {
+    margin-top: 10px;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.clue-title {
+    font-size: 20px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 10px;
+    text-align: center;
+    text-transform: uppercase;
+    margin-top: 0;
+}
+
+#funnyMessage {
+    position: fixed;
+    top: 50%;
+    left: 45%;
+    transform: translateX(-50%);
+    background-color: rgba(0, 153, 255, 0.9); /* Bright blue */
+    color: white;
+    padding: 15px;
+    border-radius: 8px;
+    display: none;
+    z-index: 9999;
+    font-size: 18px;
+    font-weight: bold;
+    transition: opacity 0.5s ease-in-out;
+    opacity: 0;
+    max-width: 500px;
+    text-align: center;
+}
+
+#funnyMessage.show {
+    display: block;
+    opacity: 1;
+}
+
+#bufferDistanceModal {
+    display: none;
+    position: fixed;
+    top: 28%;
+    right: 20px;
+    width: 300px;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+    text-align: center;
+}
+
+select {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    font-size: 16px;
+    border-radius: 5px;
+    border: 2px solid #ccc;
+}
+
+select.valid {
+    border-color: #0099ff; /* Light blue */
+}
+
+select.invalid {
+    border-color: #ff3333; /* Error red */
+}
+
+#bufferMessage.valid {
+    color: #0099ff;
+}
+
+#bufferMessage.invalid {
+    color: #ff3333;
+}
+
+/* Tutorial modals */
+.tutorial-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000;
+}
+
+.tutorial-content {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+    max-width: 400px;
+}
+
+.tutorial-content h3 {
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.tutorial-content p {
+    font-size: 16px;
+    margin-bottom: 20px;
+}
+
+.tutorial-content button {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #0073e6; /* Dark blue */
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.tutorial-content button:hover {
+    background-color: #005bb5;
+}
+
+@keyframes drawCircle {
+    0% {
+        transform: scale(0);
+        opacity: 0;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.tutorial-circle {
+    position: absolute;
+    border: 3px solid #0066cc; /* Blue border */
+    border-radius: 50%;
+    animation: drawCircle 0.5s ease-out forwards;
+    pointer-events: none;
+    z-index: 10000;
+}
+
+/* Leaflet Draw Toolbar */
+.leaflet-draw {
+    position: absolute;
+    top: 400px;
+    left: 10px;
+    z-index: 1000;
+}
+
+.leaflet-popup-content {
+    padding-bottom: 50px;
+}
+
+/* Credits Styling */
+#credits {
+    position: fixed;
+    bottom: 0px;
+    right: 0px;
+    width: auto;
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    text-align: center;
+    padding: 0px 5px;
+    font-family: 'Comic Neue', sans-serif;
+    font-size: 8px;
+    z-index: 1000;
+    border-radius: 5px;
+}
+
+#credits a {
+    color: #99ccff;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+#credits a:hover {
+    color: #ffffff;
+    text-decoration: underline;
+}
+
+/* Styling the Layers Control to match the toolbox design */
+.leaflet-control-layers {
+    font-family: 'Comic Neue', sans-serif;
+    font-size: 16px;
+    background-color: rgba(255, 255, 255, 0.9); /* Slight transparency like the toolbox */
+    border-radius: 15px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow like the toolbox */
+    padding: 10px;
+    color: #333;
+}
+
+.leaflet-control-layers-toggle {
+    background-color: #0073e6; /* Dark blue to match buttons */
+    border-radius: 10px;
+    width: 34px;
+    height: 34px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.leaflet-control-layers-toggle:hover {
+    background-color: #005bb5; /* Slightly darker on hover */
+}
+
+.leaflet-control-layers-list {
+    font-size: 16px;
+    color: #333;
+}
+
+.leaflet-control-layers-selector {
+    width: 16px;
+    height: 16px;
+}
+
+.leaflet-control-layers label {
+    font-family: 'Comic Neue', sans-serif;
+    font-size: 16px;
+    color: #333;
+}
+
+.leaflet-control-layers-overlays,
+.leaflet-control-layers-base {
+    background-color: #e6f2ff; /* Very light blue */
+    padding: 5px;
+    border-radius: 5px;
+}
+
+.leaflet-control-layers-expanded {
+    padding: 5px;
+    border-radius: 15px;
+    background-color: rgba(255, 255, 255, 0.9);
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* To match the toolbox design */
+}
+
+.leaflet-control-layers-expanded input[type="radio"],
+.leaflet-control-layers-expanded input[type="checkbox"] {
+    margin-right: 5px;
+}
+
+/* Modal Styling */
+.modal {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    text-align: center;
+}
+
+.modal.minimized {
+    display: none;
+}
+
+.modal select {
+    padding: 8px;
+    font-size: 16px;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+
+#bufferMessage.valid {
+    color: green;
+}
+
+#bufferMessage.invalid {
+    color: red;
+}
+
+/* Completely hide Leaflet popup wrapper, tip, and close button */
+.leaflet-popup-content-wrapper,
+.leaflet-popup-tip-container,
+.leaflet-popup-tip {
+    background: none !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+.leaflet-popup-content-wrapper {
+    padding: 0 !important; /* Remove extra padding */
+}
+
+.leaflet-popup-close-button {
+    display: none !important; /* Hide close button */
+}
+
+/* Base styling for all shop popups */
+.shop-popup, .green-space-popup {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Specific styling for supermarket popups */
+.supermarket {
+    background-color: #f9f9f9;
+    border: 2px solid #FFD700; /* Gold */
+    color: #333;
+}
+
+/* Specific styling for electronics shop */
+.electronics {
+    background-color: #e3f2fd; /* Light blue */
+    border: 2px solid #1e88e5; /* Blue */
+    color: #333;
+}
+
+/* Specific styling for the gift shop with animations */
+.gift-shop {
+    background-color: #e0ffe0; /* Light greenish background */
+    border: 2px solid #32CD32; /* Green border */
+    color: #006400;
+    animation: pulseGreen 1.5s infinite;
+}
+
+/* Pulse animation for the gift shop */
+@keyframes pulseGreen {
+    0% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.1); opacity: 0.8; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+/* Base styling for green space messages */
+.green-space-popup {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    padding: 10px;
+    border-radius: 5px;
+    display: inline-block;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Specific styling for progress message */
+.green-space-popup.progress {
+    background-color: #cce5ff; /* Light blue for progress messages */
+    color: #004085; /* Dark blue text */
+    border: 2px solid #004085;
+}
+
+/* Specific styling for congratulations message */
+.green-space-popup.congratulations {
+    background-color: #d4edda; /* Light green for congratulatory messages */
+    color: #155724; /* Dark green text */
+    border: 2px solid #155724;
+}
+
+/* Specific styling for warning message */
+.green-space-popup.warning {
+    background-color: #fff3cd; /* Light yellow for warnings */
+    color: #856404; /* Dark yellow text */
+    border: 2px solid #856404;
+}
+
+.tree-quiz-popup {
+    background-color: #ffffff;
+    border: 2px solid #333;
+    padding: 15px;
+    border-radius: 5px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+    text-align: center;
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+    font-size: 16px;
+    display: none;
+}
+
+.tree-quiz-option {
+    background-color: #4CAF50;
+    border: none;
+    color: white;
+    padding: 8px 15px;
+    font-size: 14px;
+    margin: 5px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.tree-quiz-option:hover {
+    background-color: #45a049;
+}
+
+.tree-quiz-popup.success {
+    color: #006400;
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+}
+
+.tree-quiz-popup.warning {
+    color: #856404;
+    background-color: #fff3cd;
+    border-color: #ffeeba;
+}
+
+.modal {
+    display: none;
+    padding: 20px;
+    border: 1px solid #ddd;
+    background-color: #fff;
+    border-radius: 5px;
+    text-align: center;
+}
+#treeQuizMessage.success {
+    color: green;
+    background-color: #d4edda; /* Light green background */
+    border: 1px solid #c3e6cb; /* Soft green border */
+    padding: 10px;
+    border-radius: 5px;
+}
+
+#treeQuizMessage.warning {
+    color: red;
+    background-color: #fff3cd; /* Light yellow background */
+    border: 1px solid #ffeeba; /* Soft yellow border */
+    padding: 10px;
+    border-radius: 5px;
+}
+
+
+
+
+
+</style>
+</head>
+
+<body>
+
+    <!-- Stap 1 Modal -->
+    <div id="tutorialStep1" class="tutorial-modal" style="display: none;">
+        <div class="tutorial-content">
+            <h3>Stap 1: Laag In- en Uitschakelen</h3>
+            <p>Gebruik de Lagen-tab in de rechterbovenhoek om lagen in en uit te schakelen.</p>
+            <button id="nextStep1">Volgende</button>
+        </div>
+    </div>
+
+    <!-- Stap 2 Modal -->
+    <div id="tutorialStep2" class="tutorial-modal" style="display: none;">
+        <div class="tutorial-content">
+            <h3>Stap 2: Gereedschapskist</h3>
+            <p>Gebruik de Gereedschapskist om de benodigde functies voor je taken uit te voeren.</p>
+            <button id="nextStep2">Volgende</button>
+        </div>
+    </div>
+
+    <!-- Stap 3 Modal -->
+    <div id="tutorialStep3" class="tutorial-modal" style="display: none;">
+        <div class="tutorial-content">
+            <h3>Stap 3: Hints</h3>
+            <p>Lees de hints zorgvuldig in de Hintsectie en volg de instructies op.</p>
+            <button id="endTutorialButton">Einde Tutorial</button>
+        </div>
+    </div>
+
+    <div class="container">
+        <h1>Voer Stads Code In</h1>
+        <form id="loginForm">
+            <input type="text" id="code" placeholder="Voer code in">
+            <button type="submit">Verzenden</button>
+            <p id="errorMessage"></p>
+        </form>
+    </div>
+
+    <!-- Gereedschapskist Knop -->
+    <div id="toolbox" style="display: none;">
+        <div id="toolboxHeader">
+            <img src="https://cdn-icons-png.flaticon.com/512/5604/5604299.png" alt="Gereedschapskist Icoon" id="toolboxIcon">
+            <span id="toolboxText">Gereedschapskist</span>
+        </div>
+        <div id="toolboxContent">
+            <button id="filterSchoolsButton">Filter Scholen</button>
+            <button id="filterShopsButton">Filter Winkels</button>
+            <button id="TreeCounterButton">Boom Teller</button>
+            <button id="createBufferButton">Buffer Maken</button>
+            <button id="findGreenAreasButton">Vind Dichtstbijzijnde Groene Gebieden</button> <!-- Nieuwe knop hier toegevoegd -->
+            <button id="treeQuizButton">Boom Quiz</button>
+            <button id="clearMapButton">Kaart Wissen</button>
+        </div>
+    </div>
+
+    <div id="counterSection">
+        <p>Aantal aangeklikte bomen: <span id="treeCounter">0</span></p>
+        <button id="resetCounterButton">Teller Resetten</button>
+    </div>
+
+    <!-- Hintsectie -->
+    <div id="clueSection" class="clue-section">
+        <h3 class="clue-title">Hints</h3>
+        <div class="clue-numbers">
+            <button class="clue-btn" data-clue="1">1</button>
+            <button class="clue-btn" data-clue="2">2</button>
+            <button class="clue-btn" data-clue="3">3</button>
+            <button class="clue-btn" data-clue="4">4</button>
+            <button class="clue-btn" data-clue="5">5</button>
+            <button class="clue-btn" data-clue="6">6</button>
+        </div>
+        <div id="clueDisplay" class="clue-display"></div>
+    </div>
+  
+        <!-- Boom Quiz Modal -->
+    <div id="treeQuizModal" class="modal" style="display: none;">
+        <h3>Hoeveel bomen staan er in het gebied?</h3>
+        <div id="treeQuizButtons">
+            <button class="tree-quiz-option" data-value="7">7</button>
+            <button class="tree-quiz-option" data-value="10">10</button>
+            <button class="tree-quiz-option" data-value="15">15</button>
+        </div>
+        <p id="treeQuizMessage"></p>
+    </div>
+
+     <!-- Buffer Afstand Modal -->
+    <div id="bufferDistanceModal" class="modal">
+        <h3>Selecteer Buffer Afstand</h3>
+        <select id="bufferDistance">
+            <option value="">Kies een afstand...</option>
+            <option value="100">100 meter</option>
+            <option value="200">200 meter</option>
+            <option value="300">300 meter</option>
+        </select>
+        <p id="bufferMessage"></p>
+    </div>
+
+    <div id="map" style="display: none;"></div>
+
+    <div id="message"></div>
+    <div id="funnyMessage"></div> <!-- Specifieke container voor het grappige bericht -->
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@turf/turf@6/turf.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/makinacorpus/Leaflet.GeometryUtil/src/leaflet.geometryutil.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    <script src="script.js"></script>
+<script id="jsbin-javascript">
+let map;
+let buildingsLayer = L.layerGroup();
+let greenSpacesLayer = L.layerGroup();
+let waterLayer = L.layerGroup();
+let treesLayer = L.layerGroup();
+let schoolsLayer; 
+let drawnItems;
+let drawControl;
+let correctBounds; 
+let ShopsLayer;
+let hasZoomedToBounds = false;
+let selectedBufferDistance = null;
+let bufferLayer = L.layerGroup(); // Layer for buffer
+let bufferDistanceModal = document.getElementById('bufferDistanceModal');
+let bufferMessage = document.getElementById('bufferMessage');
+let clues = {
+    1: "De leraar werd voor het laatst gezien in een gebouw ongeveer 100 meter van de school. Kun je ontdekken welk gebouw een school is? Gebruik de knop 'Filter Scholen'.",
+    2: "De leraar werd gezien bij een gebouw ongeveer 300 meter van de school. Gebruik de knop 'Maak Buffer', selecteer 300 meter en klik op de school om een buffer te maken.",
+    3: "De leraar werd gespot bij een van de nabijgelegen winkels. Gebruik de knop 'Filter Winkels' om winkels op de kaart te tonen en vind de juiste!",
+    4: "Geweldig! De leraar werd gezien terwijl hij ontspande in een groot groen gebied nabij de cadeauwinkel. Gebruik 'Vind Dichtstbijzijnde Groene Gebieden' om de twee dichtstbijzijnde groene gebieden te vinden.",
+    5: "Nu moet je ontdekken welk van deze twee groene gebieden de meeste bomen heeft. Gebruik de tool 'Boom Teller' om de bomen in elk gebied te tellen.",
+    6: "Bijna klaar! Nu je de bomen hebt geteld, open je de 'Boom Quiz' en beantwoord je de vraag: Hoeveel bomen staan er in het juiste groene gebied?"
+};
+
+document.addEventListener('DOMContentLoaded', (event) => {
+    document.getElementById('loginForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+        const code = document.getElementById('code').value;
+        const errorMessage = document.getElementById('errorMessage');
+
+        // New city location and layers for Delft
+        const locationMap = {
+            '5678': { name: 'Delft', lat: 52.0116, lng: 4.3556 }
+        };
+
+        if (locationMap[code]) {
+            errorMessage.textContent = '';
+            initMap(locationMap[code].lat, locationMap[code].lng);
+            document.getElementById('map').style.display = 'block';
+            document.querySelector('.container').style.display = 'none';
+            document.getElementById('clueSection').style.display = 'block';
+            document.getElementById('toolbox').style.display = 'block'; // Show toolbox
+        } else {
+            errorMessage.textContent = 'Oeps! Probeer het opnieuw, detective!';
+        }
+    });
+});
+
+function initMap(lat, lng) {
+    map = L.map('map', { zoomControl: false }).setView([lat, lng], 12);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+    L.marker([lat, lng]).addTo(map);
+
+    // Fetch and add Delft GeoJSON layers
+    fetchGeoJSON('https://raw.githubusercontent.com/mixalismix-dr/Directors/refs/heads/main/delft_buildings.geojson', buildingsLayer, {
+        color: '#ff7800', weight: 2, opacity: 1, fillOpacity: 0.2, fillColor: '#ff7800'
+    });
+
+    fetchGeoJSON('https://raw.githubusercontent.com/mixalismix-dr/Directors/refs/heads/main/delft_green_space2.geojson', greenSpacesLayer, {
+        color: '#00ff00', weight: 2, opacity: 1, fillOpacity: 0.2, fillColor: '#00ff00'
+    });
+
+    fetchGeoJSON('https://raw.githubusercontent.com/mixalismix-dr/Directors/refs/heads/main/delft_water1.geojson', waterLayer, {
+        color: '#0000ff', weight: 2, opacity: 1, fillOpacity: 0.2, fillColor: '#0000ff'
+    });
+  
+    fetchGeoJSON('https://raw.githubusercontent.com/mixalismix-dr/Directors/refs/heads/main/delft_trees1.geojson', treesLayer, {
+        pointToLayer: function (feature, latlng) {
+            return L.circleMarker(latlng, {
+                radius: 6,               // Size of the circle marker
+                fillColor: '#32CD32',    // Lime green fill
+                color: '#006400',        // Dark green border
+                weight: 1,               // Border thickness
+                opacity: 1,
+                fillOpacity: 0.8         // Transparency of the fill color
+            });
+        }
+    });
+
+    // Add the grid without showing it in the control
+    fetchGeoJSON('https://raw.githubusercontent.com/mixalismix-dr/Directors/refs/heads/main/delft_new_grid.geojson', null, {
+        color: '#1E90FF', weight: 3, opacity: 1, fillOpacity: 0.2, fillColor: '1E90FF'
+    });
+
+    // Define the correct bounds in WGS84 (lon, lat) based on RD New converted values
+    correctBounds = [
+        [51.9974075300547085, 4.3790828918529110], // Bottom-left (southwest corner)
+        [52.0107348250441390, 4.4012403868448802]  // Top-right (northeast corner)
+    ];
+
+    // Add the event listener for map clicks to check bounds
+    map.on('click', function(e) {
+        handleMapClick(e.latlng);
+    });
+
+    const overlayMaps = {
+        'Gebouwen': buildingsLayer,
+        'Groene Gebieden': greenSpacesLayer,
+        'Water': waterLayer,
+        'Bomen': treesLayer,
+    };
+    L.control.layers(null, overlayMaps).addTo(map);
+
+    map.invalidateSize();
+
+    // Handle window resize to resize the map properly
+    window.addEventListener('resize', function() {
+        map.invalidateSize();
+    });
+
+    // Ensure the map is properly resized initially
+    setTimeout(function() {
+        map.invalidateSize();
+    }, 0);
+}
+
+// Updated fetchGeoJSON function to set up tree click events after loading trees layer
+function fetchGeoJSON(url, layerGroup, options = {}) {
+    fetch(url)
+        .then(response => response.json())
+        .then(data => {
+            const geoJsonLayer = L.geoJSON(data, {
+                style: function () { return options; },
+                pointToLayer: options.pointToLayer || null
+            });
+
+            // Add GeoJSON layer to the specified layer group or map
+            geoJsonLayer.addTo(layerGroup || map);
+
+            // Set up click events if this is the trees layer
+            if (layerGroup === treesLayer) {
+                setupTreeClickEvents(geoJsonLayer);
+            }
+        });
+}
+
+// Function to handle click events and check if they are within the bounds
+function handleMapClick(latlng) {
+    const sw = L.latLng(correctBounds[0]);
+    const ne = L.latLng(correctBounds[1]);
+    const bounds = L.latLngBounds(sw, ne);
+
+    // Check if the clicked point is within the correct bounds
+    if (bounds.contains(latlng) && !hasZoomedToBounds) {
+        map.fitBounds(bounds);
+        showMessage("🎉  Goed gedaan! Je hebt in het juiste gebied geklikt!");
+        hasZoomedToBounds = true;
+    } else if (!bounds.contains(latlng)){
+        showMessage("Oeps! Probeer opnieuw, detective!");
+    }
+}
+
+// Function to display messages to the user
+function showMessage(text) {
+    const messageElement = document.getElementById('message');
+    messageElement.textContent = text;
+    messageElement.style.display = 'block';
+    setTimeout(() => {
+        messageElement.style.display = 'none';
+    }, 3000);  // Hide the message after 3 seconds
+}
+
+document.querySelectorAll('.clue-btn').forEach(button => {
+    button.addEventListener('click', function() {
+        const clueNumber = this.getAttribute('data-clue');
+        const clueDisplay = document.getElementById('clueDisplay');
+        clueDisplay.textContent = clues[clueNumber];
+
+        // Remove the active class from all clue buttons
+        document.querySelectorAll('.clue-btn').forEach(clueButton => {
+            clueButton.style.backgroundColor = '#0066cc';  // Reset color to original orange
+        });
+
+        // Set the clicked clue button to light green to indicate it's active
+        this.style.backgroundColor = '#90EE90'; // Light green
+
+        // Based on the current clue number, check the required action
+        checkClueCompletion(clueNumber);
+    });
+});
+
+// Show or hide the buffer modal when the "Create Buffer" button is clicked
+document.getElementById('createBufferButton').addEventListener('click', function () {
+    const bufferModal = document.getElementById('bufferDistanceModal');
+    console.log(bufferModal.style.display);
+    // Check the current display style and toggle between 'block' and 'none'
+    if (bufferModal.style.display === 'none' || bufferModal.style.display === '') {
+        bufferModal.style.display = 'block';  // Show the modal
+      console.log('here');
+    } else {
+        bufferModal.style.display = 'none';
+      console.log('there');// Hide the modal
+    }
+});
+
+
+// Handle buffer selection logic
+document.getElementById('bufferDistance').addEventListener('change', function () {
+    const selectedValue = parseInt(this.value);  // Convert the selected value to an integer
+    const bufferMessage = document.getElementById('bufferMessage');
+
+    bufferMessage.textContent = "";  // Clear any previous messages
+    bufferMessage.classList.remove('valid', 'invalid');
+
+    if (selectedValue === 100) {
+        // Correct distance
+        bufferMessage.textContent = "Goed gedaan! Selecteer nu je school om er een buffer omheen te maken.";
+        bufferMessage.classList.add('valid');
+        selectedBufferDistance = selectedValue; // Set selectedBufferDistance to 100
+    } else if (selectedValue === 200 || selectedValue === 300) {
+        // Incorrect distance
+        bufferMessage.textContent = "Verkeerde afstand! Selecteer de juiste afstand.";
+        bufferMessage.classList.add('invalid');
+        selectedBufferDistance = null;  // Reset selectedBufferDistance if incorrect
+    } else {
+        bufferMessage.textContent = "";
+        selectedBufferDistance = null;  // Reset selectedBufferDistance for any other input
+    }
+});
+
+    // Show or hide the tree quiz modal when the "Tree Quiz" button is clicked
+document.getElementById('treeQuizButton').addEventListener('click', function () {
+  const treeQuizModal = document.getElementById('treeQuizModal');
+  treeQuizModal.style.display = treeQuizModal.style.display === 'block' ? 'none' : 'block';
+});
+
+// Add event listeners to each tree count button
+document.querySelectorAll('.tree-quiz-option').forEach(button => {
+  button.addEventListener('click', function () {
+    const selectedValue = parseInt(this.getAttribute('data-value'));
+    checkTreeCount(selectedValue); // Check the selected answer
+  });
+});
+
+function checkTreeCount(selectedCount) {
+    const treeQuizMessage = document.getElementById('treeQuizMessage');
+
+    // Clear previous message classes
+    treeQuizMessage.classList.remove('success', 'warning');
+
+    if (selectedCount === 15) {
+        // Correct answer
+        treeQuizMessage.textContent = "🎉Gefeliciteerd! Ga nu naar de coördinaten X, Y.";
+        treeQuizMessage.classList.add('success');
+    } else {
+        // Incorrect answer
+        treeQuizMessage.textContent = "🤔 Denk goed na! Hoeveel bomen waren er?";
+        treeQuizMessage.classList.add('warning');
+    }
+
+    // Hide the message after a few seconds
+    setTimeout(() => {
+        treeQuizMessage.textContent = ''; // Clear message after 3 seconds
+    }, 3000);
+}
+
+
+
+document.addEventListener('DOMContentLoaded', function () {
+    // Ensure the button click is bound after the DOM fully loads
+    document.getElementById('filterSchoolsButton').addEventListener('click', function () {
+        console.log("Filter Schools button clicked"); // Debugging output to confirm click
+        filterSchools();
+    });
+});
+
+function filterSchools() {
+    console.log("Filter Schools function started"); // Debugging: confirms function is called
+
+    // Remove previous school layer if it exists to avoid duplicate layers
+    if (schoolsLayer) {
+        map.removeLayer(schoolsLayer);
+    }
+
+    // Initialize a new layer group for schools
+    schoolsLayer = L.layerGroup();
+
+    fetch('https://raw.githubusercontent.com/mixalismix-dr/Directors/refs/heads/main/school_delft.geojson')
+        .then(response => {
+            if (!response.ok) {
+                console.error('Error fetching the GeoJSON data:', response.statusText);
+                return;
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log("Fetched data:", data); // Debugging: confirms data retrieval
+            L.geoJSON(data, {
+                style: {
+                    color: '#FFD700',  // Gold border color
+                    weight: 2,
+                    opacity: 1,
+                    fillOpacity: 0.7,
+                    fillColor: '#FFEC8B'  // Light yellow fill color
+                }
+            }).addTo(schoolsLayer);
+
+            // Add the layer to the map
+            schoolsLayer.addTo(map);
+      
+            // Attach click event to each school feature to create buffer
+            schoolsLayer.eachLayer(layer => {
+                layer.on('click', function() {
+                    createSchoolBuffer();
+                });
+            });
+        })
+        .catch(error => {
+            console.error('Error fetching or displaying schools GeoJSON data:', error);
+        });
+}
+
+// Bind the clearMap function to the clearMapButton click event
+document.getElementById('clearMapButton').addEventListener('click', function () {
+    console.log("Clear Map button clicked"); // Debugging output
+    clearMap();
+});
+
+// Function to clear all layers except the base map
+function clearMap() {
+    // Remove all layers except the base map layer
+    if (map.hasLayer(buildingsLayer)) map.removeLayer(buildingsLayer);
+    if (map.hasLayer(greenSpacesLayer)) map.removeLayer(greenSpacesLayer);
+    if (map.hasLayer(waterLayer)) map.removeLayer(waterLayer);
+    if (map.hasLayer(treesLayer)) map.removeLayer(treesLayer);
+    if (map.hasLayer(schoolsLayer)) map.removeLayer(schoolsLayer);
+    if (map.hasLayer(bufferLayer)) map.removeLayer(bufferLayer);
+    if (map.hasLayer(ShopsLayer)) map.removeLayer(ShopsLayer);
+}
+
+
+function createSchoolBuffer() {
+    if (selectedBufferDistance === 100) {
+        bufferLayer.clearLayers(); // Clear existing buffer if any
+
+        schoolsLayer.eachLayer(layer => {
+            const buffered = turf.buffer(layer.toGeoJSON(), selectedBufferDistance / 1000, { units: 'kilometers' });
+            L.geoJSON(buffered, {
+                style: {
+                    color: 'blue',
+                    fillColor: 'lightblue',
+                    fillOpacity: 0.5
+                }
+            }).addTo(bufferLayer);
+        });
+
+        // Add buffer layer to the map
+        bufferLayer.addTo(map);
+        selectedBufferDistance = null; // Reset after creating buffer
+    } else {
+        alert("Selecteer de juiste afstand voordat u een school selecteert.");
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+    // Bind the click event for filtering shops
+    document.getElementById('filterShopsButton').addEventListener('click', function () {
+        console.log("Filter Shops button clicked"); // Debugging output
+        filterShops();
+    });
+});
+
+function filterShops() {
+    console.log("Filter Shops function started");
+
+    if (ShopsLayer) {
+        map.removeLayer(ShopsLayer);
+    }
+
+    ShopsLayer = L.layerGroup();
+
+    fetch('https://raw.githubusercontent.com/mixalismix-dr/Directors/refs/heads/main/delft_shops.geojson')
+        .then(response => {
+            if (!response.ok) {
+                console.error('Error fetching the GeoJSON data:', response.statusText);
+                return;
+            }
+            return response.json();
+        })
+        .then(data => {
+            L.geoJSON(data, {
+                style: {
+                    color: '#FF69B4',  // Pink border color
+                    weight: 2,
+                    opacity: 1,
+                    fillOpacity: 0.7,
+                    fillColor: '#FFB6C1'  // Light pink fill color
+                },
+                onEachFeature: function (feature, layer) {
+                    const osmId = feature.properties.osm_id;
+
+                    let message;
+                    let cssClass;
+
+                    // Define custom messages and CSS classes based on osm_id
+                    if (osmId === "45873478") {
+                        message = "<div class='shop-popup supermarket'>This is a <strong>supermarket</strong>. Look for the gift shop!</div>";
+                    } else if (osmId === "257247951") {
+                        message = "<div class='shop-popup electronics'>This is an <strong>electronics shop</strong>. Look for the gift shop!</div>";
+                    } else if (osmId === "257249975") {
+                        message = "<div class='shop-popup gift-shop'>Congrats! <strong>You found the gift shop!</strong></div>";
+                    }
+
+                    // Bind the custom message with a CSS class to the popup
+                    layer.bindPopup(message, { className: 'custom-popup' });
+
+                    // Open the popup when the shop is clicked
+                    layer.on('click', function () {
+                        layer.openPopup();
+                    });
+                }
+            }).addTo(ShopsLayer);
+
+            ShopsLayer.addTo(map);
+        })
+        .catch(error => {
+            console.error('Error fetching or displaying gift shops GeoJSON data:', error);
+        });
+}
+
+let correctSelectionCount = 0;
+const targetOsmIds = ["1067099777", "45878141"]; // IDs for the two correct green areas
+
+function onGreenSpaceFeature(feature, layer) {
+    const osmId = feature.properties.osm_id;
+
+    // Attach click event listener to each green area layer
+    layer.on('click', function () {
+        // Check if the clicked area is one of the correct ones and hasn't been selected already
+        if (targetOsmIds.includes(osmId) && !layer._selected) {
+            correctSelectionCount++;
+            layer._selected = true; // Mark the layer as selected to prevent duplicate clicks
+
+            let message;
+            if (correctSelectionCount < 2) {
+                // Show progress message
+                message = `<div class='green-space-popup progress'>🎉 ${correctSelectionCount}/2 gebieden gevonden. Blijf zoeken!</div>`;
+                showMessageWithClass(message);          
+            } else if (correctSelectionCount === 2) {
+                // Show congratulations message when both areas are found
+                message = "<div class='green-space-popup congratulations'>🎉 Gefeliciteerd! Je hebt beide groene gebieden in de buurt van de cadeauwinkel gevonden!</div>";
+                showMessageWithClass(message);
+                
+                // Reset selection for future interactions
+                correctSelectionCount = 0;
+                resetGreenAreaSelection(); // Reset the selected state on all areas
+            }
+        } else if (!targetOsmIds.includes(osmId)) {
+            // Feedback for incorrect selection
+            let message = "<div class='green-space-popup warning'>🤔 Weet je zeker dat dit het juiste gebied is?</div>";
+            showMessageWithClass(message);
+        }
+    });
+}
+
+// Function to show messages with specific styles
+function showMessageWithClass(htmlContent) {
+    const messageElement = document.createElement('div');
+    messageElement.innerHTML = htmlContent;
+    messageElement.style.position = 'fixed';
+    messageElement.style.transform = 'translateX(-50%)';
+    messageElement.style.zIndex = '9999';
+
+    document.body.appendChild(messageElement);
+
+    setTimeout(() => {
+        messageElement.remove(); // Remove the message after 3 seconds
+    }, 3000);
+}
+
+// Function to reset selected state on green areas
+function resetGreenAreaSelection() {
+    greenSpacesLayer.eachLayer(layer => {
+        layer._selected = false; // Reset selected state on all green area layers
+    });
+}
+
+// Function to enable and display green spaces layer with selection
+function filterGreenSpaces() {
+    console.log("Filter Green Spaces function started");
+
+    // Remove previous greenSpacesLayer if it exists
+    if (greenSpacesLayer) {
+        map.removeLayer(greenSpacesLayer);
+    }
+
+    // Initialize new layer group for green spaces
+    greenSpacesLayer = L.layerGroup();
+
+    // Fetch the GeoJSON data for green spaces
+    fetch('https://raw.githubusercontent.com/mixalismix-dr/Directors/refs/heads/main/delft_green_space2.geojson')
+        .then(response => {
+            if (!response.ok) {
+                console.error('Error fetching the GeoJSON data:', response.statusText);
+                return;
+            }
+            return response.json();
+        })
+        .then(data => {
+            // Add GeoJSON data to greenSpacesLayer with onGreenSpaceFeature as the callback
+            L.geoJSON(data, {
+                style: {
+                    color: '#00ff00',  // Green border color
+                    weight: 2,
+                    opacity: 1,
+                    fillOpacity: 0.7,
+                    fillColor: '#90EE90'  // Light green fill color
+                },
+                onEachFeature: onGreenSpaceFeature // Attach the click event handler for selection
+            }).addTo(greenSpacesLayer);
+
+            // Add greenSpacesLayer to the map
+            greenSpacesLayer.addTo(map);
+        })
+        .catch(error => {
+            console.error('Error fetching or displaying green spaces GeoJSON data:', error);
+        });
+}
+
+
+// Function to reset selection on all green areas
+function resetGreenAreaSelection() {
+    greenSpacesLayer.eachLayer(layer => {
+        layer._selected = false; // Reset selection status
+    });
+}
+
+// Utility function to show messages to the user
+function showMessage(text) {
+    const messageElement = document.getElementById('message');
+    messageElement.textContent = text;
+    messageElement.style.display = 'block';
+    setTimeout(() => {
+        messageElement.style.display = 'none';
+    }, 3000); // Message disappears after 3 seconds
+}
+
+// Enable the feature on button click
+document.getElementById('findGreenAreasButton').addEventListener('click', function () {
+    filterGreenSpaces(); // Call the function to enable green spaces layer and feature click functionality
+});
+
+
+// Define global variables for tree counter and highlighted trees
+let treeClickCounter = 0;
+let highlightedTrees = []; // Array to store highlighted trees
+
+// Event listener for the "Tree Counter" button
+document.getElementById('TreeCounterButton').addEventListener('click', function () {
+    // Toggle visibility of treesLayer
+    if (map.hasLayer(treesLayer)) {
+        map.removeLayer(treesLayer); // Remove layer if it's already on the map
+        document.getElementById('counterSection').style.display = 'none'; // Hide counter section
+    } else {
+        map.addLayer(treesLayer); // Add layer if it's not on the map
+        document.getElementById('counterSection').style.display = 'block'; // Show counter section
+    }
+});
+
+document.getElementById('resetCounterButton').addEventListener('click', resetCounter);
+
+// Function to increment the tree counter
+function incrementCounter() {
+    treeClickCounter++;
+    document.getElementById('treeCounter').textContent = treeClickCounter;
+}
+
+function resetCounter() {
+    // Reset counter to zero and update display
+    treeClickCounter = 0;
+    document.getElementById('treeCounter').textContent = treeClickCounter;
+
+    // Unhighlight all previously highlighted trees
+    unhighlightAllTrees();
+}
+
+function highlightTree(layer) {
+
+    // Apply new style to the clicked tree only
+    layer.setStyle({
+        color: "#FFD700",  // Gold border
+        fillColor: "#FFD700", // Gold fill
+        weight: 3,  // Thicker border
+        radius: 6  // Larger size
+    });
+    highlightedTrees.push(layer); // Add to highlighted trees array
+}
+
+function unhighlightAllTrees() {
+    highlightedTrees.forEach(layer => {
+        layer.setStyle({
+            color: "#006400",  // Original dark green border
+            fillColor: "#32CD32", // Original lime green fill
+            weight: 1,  // Original border weight
+            radius: 4  // Original radius
+        });
+    });
+    
+    // Clear the highlighted trees array
+    highlightedTrees = [];
+}
+
+function setupTreeClickEvents(geoJsonLayer) {
+    geoJsonLayer.eachLayer(layer => {
+        layer.on('click', function (e) {
+            highlightTree(layer); // Highlight tree on click
+            incrementCounter(); // Increment the counter
+            e.originalEvent.stopPropagation(); // Prevents map click propagation
+        });
+    });
+}
+
+// Call this function after treesLayer is loaded with GeoJSON data
+setupTreeClickEvents();
+
+
+
+
+</script>
+</body>
+
+<!-- Credits Sectie -->
+<footer id="credits">
+    <p>Ontwikkeld door 
+        <a href="https://www.linkedin.com/in/michalis-michalas-b37aa3177/" target="_blank" id="developerLink">Michalis Michalas</a> 
+        voor 
+        <a href="https://3d.bk.tudelft.nl/" target="_blank" id="tudelftLink">TU Delft Faculteit Bouwkunde en de Gebouwde Omgeving - Stedelijke Datawetenschappen.
+    </p>
+</footer>
+</html>
