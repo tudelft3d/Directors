@@ -1,0 +1,828 @@
+body { 
+    font-family: 'Comic Neue', sans-serif;
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #33ccff, #6699ff); /* Light blue to mid-blue gradient */
+}
+
+h1 {
+    color: #0073e6; /* Dark blue */
+    font-size: 36px;
+    text-shadow: 2px 2px #99ccff; /* Lighter blue shadow */
+    margin-bottom: 20px;
+}
+
+.container {
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    max-width: 400px;
+    width: 100%;
+    border: 3px solid #0073e6; /* Dark blue */
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+label {
+    font-size: 18px;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+input {
+    padding: 15px;
+    margin-bottom: 15px;
+    border: 2px solid #99ccff; /* Light blue */
+    border-radius: 10px;
+    width: 200px;
+    font-size: 18px;
+    background-color: #f0f8ff; /* Very light blue */
+    color: #333;
+    text-align: center;
+    transition: border-color 0.3s ease;
+}
+
+input:focus {
+    border-color: #0073e6; /* Dark blue */
+    outline: none;
+}
+
+button {
+    padding: 12px 25px;
+    background-color: #0073e6; /* Dark blue */
+    color: white;
+    border: none;
+    border-radius: 15px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+}
+
+button:hover {
+    background-color: #005bb5; /* Slightly darker blue */
+    transform: scale(1.05);
+}
+
+#errorMessage {
+    color: #ff3333; /* Red for error messages */
+    font-size: 16px;
+    margin-top: 20px;
+    display: none;
+}
+
+#map {
+    height: 100vh;
+    width: 100vw;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 0;
+    display: none;
+}
+
+#toolbox {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    z-index: 1000;
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 15px;
+    padding: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+#toolboxIcon {
+    width: 34px;
+    height: 34px;
+    margin-right: 8px;
+}
+
+#toolboxContent {
+    font-family: 'Comic Neue', handwriting;
+    font-size: 16px;
+    color: #333;
+    display: none;
+    margin-left: 10px;
+    flex-direction: column;
+    align-items: center; /* Center-align items horizontally */
+    text-align: center;
+    margin-top: 5px;/* Center text alignment */
+}
+
+#toolbox:hover #toolboxContent {
+    display: flex;
+}
+
+#toolboxContent button {
+    font-family: 'Comic Neue', sans-serif;
+    font-size: 16px;
+    color: #333;
+    background-color: #e6f2ff; /* Very light blue */
+    border: none;
+    border-radius: 4px;
+    padding: 8px;
+    cursor: pointer;
+    margin: 5px 0;
+    width: 100%;
+    text-align: left;
+}
+
+#toolboxContent button:hover {
+    background-color: #004080; /* Darker blue */
+    color: white;
+}
+
+#toolboxHeader {
+    font-family: 'Comic Neue', sans-serif;
+    display: flex;
+    align-items: center; /* Vertically center the content inside the header */
+    justify-content: center; /* Horizontally center the content */
+}
+
+
+#message {
+    position: fixed;
+    bottom: 170px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 10px;
+    border-radius: 4px;
+    display: none;
+    z-index: 9999;
+    font-size: 14px;
+}
+
+#counterSection {
+    position: fixed;
+    top: 200px;
+    right: 20px;
+    z-index: 2000;
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    display: none;
+    width: 150px;
+}
+
+#treeCounter {
+    font-size: 18px;
+    font-weight: bold;
+    color: #007bff; /* Bright blue */
+}
+
+#resetCounterButton {
+    margin-top: 10px;
+    background-color: #0066cc; /* Darker blue */
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    width: 100%;
+}
+
+#resetCounterButton:hover {
+    background-color: #0055b3; /* Even darker blue */
+}
+
+.clue-section {
+    display: none;
+    position: absolute;
+    z-index: 1;
+    bottom: 20px;
+    width: 100%;
+    text-align: center;
+    padding: 10px;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    border: 2px solid rgba(0, 102, 204, 0.7); /* Slightly transparent dark blue */
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.3);
+    margin-bottom: 40px;
+}
+
+.clue-numbers {
+    display: flex;
+    justify-content: center;
+}
+
+.clue-btn {
+    width: 40px;
+    height: 40px;
+    background-color: #0066cc; /* Dark blue */
+    border: none;
+    border-radius: 50%;
+    color: white;
+    font-size: 18px;
+    margin: 0 10px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.clue-btn:hover {
+    background-color: #0055b3; /* Darker blue */
+}
+
+.clue-display {
+    margin-top: 10px;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.clue-title {
+    font-size: 20px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 10px;
+    text-align: center;
+    text-transform: uppercase;
+    margin-top: 0;
+}
+
+#funnyMessage {
+    position: fixed;
+    top: 50%;
+    left: 45%;
+    transform: translateX(-50%);
+    background-color: rgba(0, 153, 255, 0.9); /* Bright blue */
+    color: white;
+    padding: 15px;
+    border-radius: 8px;
+    display: none;
+    z-index: 9999;
+    font-size: 18px;
+    font-weight: bold;
+    transition: opacity 0.5s ease-in-out;
+    opacity: 0;
+    max-width: 500px;
+    text-align: center;
+}
+
+#funnyMessage.show {
+    display: block;
+    opacity: 1;
+}
+
+#bufferDistanceModal {
+    display: none;
+    position: fixed;
+    top: 28%;
+    right: 20px;
+    width: 300px;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+    text-align: center;
+}
+
+select {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    font-size: 16px;
+    border-radius: 5px;
+    border: 2px solid #ccc;
+}
+
+select.valid {
+    border-color: #0099ff; /* Light blue */
+}
+
+select.invalid {
+    border-color: #ff3333; /* Error red */
+}
+
+#bufferMessage.valid {
+    color: #0099ff;
+}
+
+#bufferMessage.invalid {
+    color: #ff3333;
+}
+
+/* Tutorial modals */
+.tutorial-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000;
+}
+
+.tutorial-content {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+    max-width: 400px;
+}
+
+.tutorial-content h3 {
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.tutorial-content p {
+    font-size: 16px;
+    margin-bottom: 20px;
+}
+
+.tutorial-content button {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #0073e6; /* Dark blue */
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.tutorial-content button:hover {
+    background-color: #005bb5;
+}
+
+@keyframes drawCircle {
+    0% {
+        transform: scale(0);
+        opacity: 0;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.tutorial-circle {
+    position: absolute;
+    border: 3px solid #0066cc; /* Blue border */
+    border-radius: 50%;
+    animation: drawCircle 0.5s ease-out forwards;
+    pointer-events: none;
+    z-index: 10000;
+}
+
+/* Leaflet Draw Toolbar */
+.leaflet-draw {
+    position: absolute;
+    top: 400px;
+    left: 10px;
+    z-index: 1000;
+}
+
+.leaflet-popup-content {
+    padding-bottom: 50px;
+}
+
+/* Credits Styling */
+#credits {
+    position: fixed;
+    bottom: 0px;
+    right: 0px;
+    width: auto;
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    text-align: center;
+    padding: 0px 5px;
+    font-family: 'Comic Neue', sans-serif;
+    font-size: 8px;
+    z-index: 1000;
+    border-radius: 5px;
+}
+
+#credits a {
+    color: #99ccff;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+#credits a:hover {
+    color: #ffffff;
+    text-decoration: underline;
+}
+
+/* Styling the Layers Control to match the toolbox design */
+.leaflet-control-layers {
+    font-family: 'Comic Neue', sans-serif;
+    font-size: 16px;
+    background-color: rgba(255, 255, 255, 0.9); /* Slight transparency like the toolbox */
+    border-radius: 15px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow like the toolbox */
+    padding: 10px;
+    color: #333;
+}
+
+.leaflet-control-layers-toggle {
+    background-color: #0073e6; /* Dark blue to match buttons */
+    border-radius: 10px;
+    width: 34px;
+    height: 34px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.leaflet-control-layers-toggle:hover {
+    background-color: #005bb5; /* Slightly darker on hover */
+}
+
+.leaflet-control-layers-list {
+    font-size: 16px;
+    color: #333;
+}
+
+.leaflet-control-layers-selector {
+    width: 16px;
+    height: 16px;
+}
+
+.leaflet-control-layers label {
+    font-family: 'Comic Neue', sans-serif;
+    font-size: 16px;
+    color: #333;
+}
+
+.leaflet-control-layers-overlays,
+.leaflet-control-layers-base {
+    background-color: #e6f2ff; /* Very light blue */
+    padding: 5px;
+    border-radius: 5px;
+}
+
+.leaflet-control-layers-expanded {
+    padding: 5px;
+    border-radius: 15px;
+    background-color: rgba(255, 255, 255, 0.9);
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* To match the toolbox design */
+}
+
+.leaflet-control-layers-expanded input[type="radio"],
+.leaflet-control-layers-expanded input[type="checkbox"] {
+    margin-right: 5px;
+}
+
+/* Modal Styling */
+.modal {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    text-align: center;
+}
+
+.modal.minimized {
+    display: none;
+}
+
+.modal select {
+    padding: 8px;
+    font-size: 16px;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+
+#bufferMessage.valid {
+    color: green;
+}
+
+#bufferMessage.invalid {
+    color: red;
+}
+
+/* Completely hide Leaflet popup wrapper, tip, and close button */
+.leaflet-popup-content-wrapper,
+.leaflet-popup-tip-container,
+.leaflet-popup-tip {
+    background: none !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+.leaflet-popup-content-wrapper {
+    padding: 0 !important; /* Remove extra padding */
+}
+
+.leaflet-popup-close-button {
+    display: none !important; /* Hide close button */
+}
+
+/* Base styling for all shop popups */
+.shop-popup, .green-space-popup {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Specific styling for supermarket popups */
+.supermarket {
+    background-color: #f9f9f9;
+    border: 2px solid #FFD700; /* Gold */
+    color: #333;
+}
+
+/* Specific styling for electronics shop */
+.electronics {
+    background-color: #e3f2fd; /* Light blue */
+    border: 2px solid #1e88e5; /* Blue */
+    color: #333;
+}
+
+/* Specific styling for the gift shop with animations */
+.gift-shop {
+    background-color: #e0ffe0; /* Light greenish background */
+    border: 2px solid #32CD32; /* Green border */
+    color: #006400;
+    animation: pulseGreen 1.5s infinite;
+}
+
+/* Pulse animation for the gift shop */
+@keyframes pulseGreen {
+    0% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.1); opacity: 0.8; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+/* Base styling for green space messages */
+.green-space-popup {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+/* Specific styling for progress message */
+.green-space-popup.progress {
+    background-color: #cce5ff; /* Light blue for progress messages */
+    color: #004085; /* Dark blue text */
+    border: 2px solid #004085;
+}
+
+.green-space-popup.congratulations {
+    background-color: #d4edda; /* Light green background for success */
+    color: #155724;            /* Dark green text */
+    border: 2px solid #155724;
+    margin-left: 10px; /* Adjust the value to move it more right */
+
+}
+
+/* Specific styling for warning message */
+.green-space-popup.warning {
+    background-color: #fff3cd; /* Light yellow for warnings */
+    color: #856404; /* Dark yellow text */
+    border: 2px solid #856404;
+}
+
+.tree-quiz-popup {
+    background-color: #ffffff;
+    border: 2px solid #333;
+    padding: 15px;
+    border-radius: 5px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+    text-align: center;
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+    font-size: 16px;
+    display: none;
+}
+
+.tree-quiz-option {
+    background-color: #4CAF50;
+    border: none;
+    color: white;
+    padding: 8px 15px;
+    font-size: 14px;
+    margin: 5px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.tree-quiz-option:hover {
+    background-color: #45a049;
+}
+
+.tree-quiz-popup.success {
+    color: #006400;
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+}
+
+.tree-quiz-popup.warning {
+    color: #856404;
+    background-color: #fff3cd;
+    border-color: #ffeeba;
+}
+
+.modal {
+    display: none;
+    padding: 20px;
+    border: 1px solid #ddd;
+    background-color: #fff;
+    border-radius: 5px;
+    text-align: center;
+}
+#treeQuizMessage.success {
+    color: green;
+    background-color: #d4edda; /* Light green background */
+    border: 1px solid #c3e6cb; /* Soft green border */
+    padding: 10px;
+    border-radius: 5px;
+}
+
+#treeQuizMessage.warning {
+    color: red;
+    background-color: #fff3cd; /* Light yellow background */
+    border: 1px solid #ffeeba; /* Soft yellow border */
+    padding: 10px;
+    border-radius: 5px;
+}
+
+/* Error message styling */
+.error-message {
+    color: red;
+    font-weight: bold;
+    font-size: 1rem;
+    margin-top: 10px;
+    display: none; /* Hide by default */
+}
+
+
+/* Greenish message styling */
+.hint-message {
+    position: fixed;
+    bottom: 190px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 10px 20px;
+    background-color: #d4edda; /* Light green background */
+    color: #155724; /* Dark green text */
+    border: 1px solid #c3e6cb; /* Subtle greenish border */
+    border-radius: 8px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    z-index: 10000;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+
+/* Practice Modal */
+
+.modal {
+    position: fixed;
+    bottom
+    left: 20%;
+    transform: translateX(-50%); /* Center horizontally using transform */
+    width: auto;
+    max-width: 400px;
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+    padding: 15px;
+    display: none; /* Hidden by default */
+}
+
+.practice-task-content h3 {
+    font-size: 18px;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.practice-task-content p {
+    font-size: 14px;
+    margin-bottom: 15px;
+    
+}
+
+.practice-task-content button {
+    margin: 5px;
+    padding: 8px 15px;
+    font-size: 14px;
+    background-color: #0073e6;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#practiceSkipButton {
+    float: left; /* Align Skip Practice to the left */
+}
+
+#practiceNextButton {
+    float: right; /* Align Volgende to the right */
+}
+
+/* Feedback message styles */
+#practiceFeedback {
+    margin-top: 15px;
+    font-size: 14px;
+    text-align: center;
+}
+
+.feedback-success {
+    color: #28a745; /* Green for success */
+    font-weight: bold;
+}
+
+.feedback-error {
+    color: #dc3545; /* Red for errors */
+    font-weight: bold;
+}
+
+/* Locked state */
+.clue-btn.locked {
+    color: #666;
+    cursor: not-allowed;
+    border: 1px solid #999;
+    font-size: 18px;
+    opacity: 0.8;
+    transition: opacity 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Unlocked state */
+.clue-btn.unlocked {
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+    border: 1px solid #0056b3;
+    font-size: 18px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Faint shadow for a "lifted" look */
+    opacity: 0.8; /* Slightly transparent */
+    transition: opacity 0.3s ease, box-shadow 0.3s ease; /* Smooth fade effect */
+}
+
+.clue-btn.unlocked:hover {
+    opacity: 1; /* Fully opaque on hover */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); /* Slightly larger shadow */
+}
+
+/* Unlock animation */
+.unlock-animation {
+    animation: fadeIn 1s;
+}
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Clue display styling */
+.clue-display {
+    margin-top: 20px;
+    font-size: 16px;
+    color: #333;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
+
