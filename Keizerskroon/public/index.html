@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="nl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stadskaart Viewer met Meet-, Teller- en Hintgereedschap - Delft</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet">
+</head>
+
+<body>
+  
+      <!-- Tutorial Choice Modal -->
+    <div id="tutorialChoice" class="tutorial-modal" style="display: none;">
+        <div class="tutorial-content">
+            <h3>Wil je een tutorial van de site zien?</h3>
+            <button id="tutorialYes">Ja</button>
+            <button id="tutorialNo">Nee</button>
+        </div>
+    </div>
+  
+      <!-- Practice Modal -->
+    <div id="practiceTaskModal" class="modal" style="display: none;">
+        <div class="practice-task-content">
+            <h3 id="practiceTaskTitle">Practice</h3>
+            <p id="practiceTaskDescription">Toon de laag 'Groene Gebieden'</p>
+            <button id="practiceNextButton">Volgende</button>
+            <button id="practiceSkipButton">Skip Practice</button> <!-- Add this button -->
+            <p id="practiceFeedback"></p> <!-- Feedback section -->
+        </div>
+    </div>
+
+    <!-- Stap 1 Modal -->
+    <div id="tutorialStep1" class="tutorial-modal" style="display: none;">
+        <div class="tutorial-content">
+            <h3>Stap 1: Laag In- en Uitschakelen</h3>
+            <p>Gebruik de Lagen-tab in de rechterbovenhoek om lagen in en uit te schakelen.</p>
+            <button id="nextStep1">Volgende</button>
+        </div>
+    </div>
+
+    <!-- Stap 2 Modal -->
+    <div id="tutorialStep2" class="tutorial-modal" style="display: none;">
+        <div class="tutorial-content">
+            <h3>Stap 2: Gereedschapskist</h3>
+            <p>Gebruik de Gereedschapskist om de benodigde functies voor je taken uit te voeren.</p>
+            <button id="nextStep2">Volgende</button>
+        </div>
+    </div>
+
+    <!-- Stap 3 Modal -->
+    <div id="tutorialStep3" class="tutorial-modal" style="display: none;">
+        <div class="tutorial-content">
+            <h3>Stap 3: Hints</h3>
+            <p>Lees de hints zorgvuldig in de Hintsectie en volg de instructies op.</p>
+            <button id="endTutorialButton">Einde Tutorial</button>
+        </div>
+    </div>
+
+    <div class="container">
+        <h1>Voer de viercijferige code in</h1>
+        <form id="loginForm">
+            <input type="text" id="code" placeholder="Voer code in">
+            <button type="submit">Verzenden</button>
+            <p id="errorMessage"></p>
+        </form>
+    </div>
+
+    <!-- Gereedschapskist Knop -->
+    <div id="toolbox" style="display: none;">
+        <div id="toolboxHeader">
+            <img src="https://cdn-icons-png.flaticon.com/512/5604/5604299.png" alt="Gereedschapskist Icoon" id="toolboxIcon">
+            <span id="toolboxText">Gereedschapskist</span>
+        </div>
+        <div id="toolboxContent">
+            <button id="filterSchoolsButton">Filter Scholen</button>
+            <button id="filterShopsButton">Filter Winkels</button>
+            <button id="TreeCounterButton">Bomenteller</button>
+            <button id="createBufferButton">Buffer Maken</button>
+            <button id="findGreenAreasButton">Vind Dichtstbijzijnde Groene Gebieden</button> <!-- Nieuwe knop hier toegevoegd -->
+            <button id="treeQuizButton">Bomen Quiz</button>
+            <button id="clearMapButton">Kaart Wissen</button>
+        </div>
+    </div>
+
+    <div id="counterSection">
+        <p>Aantal aangeklikte bomen: <span id="treeCounter">0</span></p>
+        <button id="resetCounterButton">Teller Resetten</button>
+    </div>
+
+    <!-- Hintsectie -->
+    <div id="clueSection" class="clue-section">
+        <h3 class="clue-title">Hints</h3>
+        <div class="clue-numbers">
+            <button class="clue-btn" data-clue="1">1</button>
+            <button class="clue-btn" data-clue="2">2</button>
+            <button class="clue-btn" data-clue="3">3</button>
+            <button class="clue-btn" data-clue="4">4</button>
+            <button class="clue-btn" data-clue="5">5</button>
+            <button class="clue-btn" data-clue="6">6</button>
+        </div>
+        <div id="clueDisplay" class="clue-display"></div>
+    </div>
+  
+        <!-- Boom Quiz Modal -->
+    <div id="treeQuizModal" class="modal" style="display: none;">
+        <h3>Hoeveel bomen staan er in het gebied?</h3>
+        <div id="treeQuizButtons">
+            <button class="tree-quiz-option" data-value="4">4</button>
+            <button class="tree-quiz-option" data-value="6">6</button>
+            <button class="tree-quiz-option" data-value="7">7</button>
+        </div>
+        <p id="treeQuizMessage"></p>
+    </div>
+
+     <!-- Buffer Afstand Modal -->
+    <div id="bufferDistanceModal" class="modal">
+        <h3>Selecteer Buffer Afstand</h3>
+        <select id="bufferDistance">
+            <option value="">Kies een afstand...</option>
+            <option value="100">100 meter</option>
+            <option value="200">200 meter</option>
+            <option value="300">300 meter</option>
+        </select>
+        <p id="bufferMessage"></p>
+    </div>
+
+    <div id="map" style="display: none;"></div>
+
+    <div id="message"></div>
+    <div id="funnyMessage"></div> <!-- Specifieke container voor het grappige bericht -->
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@turf/turf@6/turf.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/makinacorpus/Leaflet.GeometryUtil/src/leaflet.geometryutil.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    <script src="script.js"></script>
+</body>
+
+<!-- Credits Sectie -->
+<footer id="credits">
+    <p>Ontwikkeld door 
+        <a href="https://www.linkedin.com/in/michalis-michalas-b37aa3177/" target="_blank" id="developerLink">Michalis Michalas</a> 
+        voor 
+        <a href="https://3d.bk.tudelft.nl/" target="_blank" id="tudelftLink">TU Delft Faculteit Bouwkunde en de Gebouwde Omgeving - Stedelijke Datawetenschappen.
+    </p>
+</footer>
+</html>
