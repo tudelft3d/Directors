@@ -52,7 +52,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
         const configurations = {
             '1594': {
                 bufferDistance: 300,
-                treeCount: 7,
+                treeCount: 10,
                 greenAreaOsmIds: [1, 1000],
                 shopOsmIds: ["257546957", "257547277", "257557501", "257545704"],
                 geoJSONUrls: {
