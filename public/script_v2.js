@@ -1004,5 +1004,5 @@ function setupTreeClickEvents(geoJsonLayer) {
 // Call this function after treesLayer is loaded with GeoJSON data
 setupTreeClickEvents();
 
-
+console.log("Version 2 loaded");
 
