@@ -1,27 +1,20 @@
+﻿// JavaScript source code
 let map;
 let buildingsLayer = L.layerGroup();
 let greenSpacesLayer = L.layerGroup();
 let waterLayer = L.layerGroup();
 let treesLayer = L.layerGroup();
-let schoolsLayer; 
+let schoolsLayer;
 let drawnItems;
 let drawControl;
-let correctBounds; 
+let correctBounds;
 let ShopsLayer;
 let hasZoomedToBounds = false;
 let selectedBufferDistance = null;
-let bufferLayer = L.layerGroup(); // Layer for buffer
+let bufferLayer = L.layerGroup();
 let bufferDistanceModal = document.getElementById('bufferDistanceModal');
 let bufferMessage = document.getElementById('bufferMessage');
-let clues = {
-    1: "Meester Ton werd voor het laatst gezien in een gebouw ongeveer 100 meter van de school. Kun jij uitvinden welk gebouw een school is? Gebruik de juiste kaartlaag (rechtsboven) en de juiste opdrachtknop uit de gereedschapskist (linksboven).",
-    2: "Meester Ton werd gezien bij een gebouw ongeveer 100 meter van de school. Gebruik de knop 'Buffer Maken', kies de juiste afstand en klik op de school om een buffer te maken.",
-    3: "Meester Ton werd gespot bij de cadeauwinkel. Gebruik de knop 'Filter Winkels' om winkels op de kaart te tonen en vind de cadeauwinkel!",
-    4: "Geweldig, je bent een stapje dichterbij gekomen! De eigenaar van de cadeauwinkel heeft hem zien lopen richting een groot groen gebied vlakbij de cadeauwinkel. Gebruik 'Vind Dichtstbijzijnde Groene Gebieden' om de twee dichtstbijzijnde groene gebieden te vinden.",
-    5: "Nu moet je uitzoeken welk van deze twee groene gebieden de meeste bomen heeft want daar is meester Ton geweest. Selecteer de juiste kaartlaag (rechtsboven). Gebruik daarna de tool 'Bomenteller' om de bomen in elk gebied te tellen.",
-    6: "Bijna klaar! Nu je de bomen hebt geteld, open je de 'Bomen Quiz' en beantwoord je de vraag: Hoeveel bomen staan er in het groene gebied waar de meester is gezien?"
-};
-
+let clues;
 let clueStatus = {
     1: true,  // Clue 1 is unlocked by default
     2: false,
@@ -31,30 +24,104 @@ let clueStatus = {
     6: false,
 };
 
+let config = {
+    bufferDistance: null,
+    treeCount: null,
+    greenAreaOsmIds: [],
+    shopOsmIds: [],
+    correctBound: [],
+    geoJSONUrls: {
+        buildings: '',
+        greenSpaces: '',
+        water: '',
+        trees: '',
+        schools: '',
+        shops: '',
+        grid: ''
+    }
+};
 
 document.addEventListener('DOMContentLoaded', (event) => {
-    document.getElementById('loginForm').addEventListener('submit', function(event) {
+    document.getElementById('loginForm').addEventListener('submit', function (event) {
         event.preventDefault();
         const code = document.getElementById('code').value;
         const errorMessage = document.getElementById('errorMessage');
 
-        // Define location for Delft with code 1593
-        const locationMap = {
-            '1593': { name: 'Delft', lat: 52.0116, lng: 4.3556 }
+        // Define configurations for different codes
+        //Code For Keizerskroon=1594  
+        const configurations = {
+            '1594': {
+                bufferDistance: 300,
+                treeCount: 7,
+                greenAreaOsmIds: [1, 1000],
+                shopOsmIds: ["257546957", "257547277", "257557501", "257545704"],
+                geoJSONUrls: {
+                    buildings: 'https://raw.githubusercontent.com/mixalismix-dr/Directors/refs/heads/main/Keizerskroon/buildings.geojson',
+                    greenSpaces: 'https://raw.githubusercontent.com/mixalismix-dr/Directors/refs/heads/main/Keizerskroon/green_space4.geojson',
+                    water: 'https://raw.githubusercontent.com/mixalismix-dr/Directors/refs/heads/main/Keizerskroon/water.geojson',
+                    trees: 'https://raw.githubusercontent.com/mixalismix-dr/Directors/refs/heads/main/Keizerskroon/trees2.geojson',
+                    schools: 'https://raw.githubusercontent.com/mixalismix-dr/Directors/refs/heads/main/school1.geojson',
+                    shops: 'https://raw.githubusercontent.com/mixalismix-dr/Directors/refs/heads/main/Keizerskroon/shops.geojson',
+                    grid: 'https://raw.githubusercontent.com/mixalismix-dr/Directors/refs/heads/main/delft_new_grid.geojson'
+                },
+                clues: {
+                    1: "Meester Ton werd voor het laatst gezien in een gebouw ongeveer 300 meter van de school. Kun jij uitvinden welk gebouw een school is? Gebruik de juiste kaartlaag (rechtsboven) en de juiste opdrachtknop uit de gereedschapskist (linksboven).",
+                    2: "Meester Ton werd gezien bij een gebouw ongeveer 300 meter van de school. Gebruik de knop 'Buffer Maken', kies de juiste afstand en klik op de school om een buffer te maken.",
+                    3: "Meester Ton werd gespot bij de cadeauwinkel. Gebruik de knop 'Filter Winkels' om winkels op de kaart te tonen en vind de cadeauwinkel!",
+                    4: "Geweldig, je bent een stapje dichterbij gekomen! De eigenaar van de cadeauwinkel heeft hem zien lopen richting een groot groen gebied vlakbij de cadeauwinkel. Gebruik 'Vind Dichtstbijzijnde Groene Gebieden' om de twee dichtstbijzijnde groene gebieden te vinden.",
+                    5: "Nu moet je uitzoeken welk van deze twee groene gebieden de meeste bomen heeft want daar is meester Ton geweest. Selecteer de juiste kaartlaag (rechtsboven). Gebruik daarna de tool 'Bomenteller' om de bomen in elk gebied te tellen.",
+                    6: "Bijna klaar! Nu je de bomen hebt geteld, open je de 'Bomen Quiz' en beantwoord je de vraag: Hoeveel bomen staan er in het groene gebied waar de meester is gezien?"
+                },
+                correctBounds: [
+                    [52.01106096916104, 4.422754471047392],
+                    [51.99774482575294, 4.444944031251278]
+                ]
+            },
+            '1599': {
+                bufferDistance: 100,
+                treeCount: 15,
+                greenAreaOsmIds: ["1067099777", "45878141"],
+                shopOsmIds: ["45873478", "257247951", "257249975"],
+                geoJSONUrls: {
+                    buildings: 'https://raw.githubusercontent.com/mixalismix-dr/Directors/refs/heads/main/delft_buildings.geojson',
+                    greenSpaces: 'https://raw.githubusercontent.com/mixalismix-dr/Directors/refs/heads/main/delft_green_space2.geojson',
+                    water: 'https://raw.githubusercontent.com/mixalismix-dr/Directors/refs/heads/main/delft_water1.geojson',
+                    trees: 'https://raw.githubusercontent.com/mixalismix-dr/Directors/refs/heads/main/delft_trees1.geojson',
+                    schools: 'https://raw.githubusercontent.com/mixalismix-dr/Directors/refs/heads/main/school_delft.geojson',
+                    shops: 'https://raw.githubusercontent.com/mixalismix-dr/Directors/refs/heads/main/delft_shops.geojson',
+                    grid: 'https://raw.githubusercontent.com/mixalismix-dr/Directors/refs/heads/main/delft_new_grid.geojson'
+                },
+                clues: {
+                    1: "Meester Ton werd voor het laatst gezien in een gebouw ongeveer 100 meter van de school. Kun jij uitvinden welk gebouw een school is? Gebruik de juiste kaartlaag (rechtsboven) en de juiste opdrachtknop uit de gereedschapskist (linksboven).",
+                    2: "Meester Ton werd gezien bij een gebouw ongeveer 100 meter van de school. Gebruik de knop 'Buffer Maken', kies de juiste afstand en klik op de school om een buffer te maken.",
+                    3: "Meester Ton werd gespot bij de cadeauwinkel. Gebruik de knop 'Filter Winkels' om winkels op de kaart te tonen en vind de cadeauwinkel!",
+                    4: "Geweldig, je bent een stapje dichterbij gekomen! De eigenaar van de cadeauwinkel heeft hem zien lopen richting een groot groen gebied vlakbij de cadeauwinkel. Gebruik 'Vind Dichtstbijzijnde Groene Gebieden' om de twee dichtstbijzijnde groene gebieden te vinden.",
+                    5: "Nu moet je uitzoeken welk van deze twee groene gebieden de meeste bomen heeft want daar is meester Ton geweest. Selecteer de juiste kaartlaag (rechtsboven). Gebruik daarna de tool 'Bomenteller' om de bomen in elk gebied te tellen.",
+                    6: "Bijna klaar! Nu je de bomen hebt geteld, open je de 'Bomen Quiz' en beantwoord je de vraag: Hoeveel bomen staan er in het groene gebied waar de meester is gezien?"
+                },
+                correctBounds: [
+                    [51.9974075300547085, 4.3790828918529110],
+                    [52.0107348250441390, 4.4012403868448802]
+                ]
+            }
         };
 
-        if (locationMap[code]) {
+        if (configurations[code]) {
             // Clear and hide error message if code is correct
             errorMessage.textContent = '';
             errorMessage.style.display = 'none';
-            
+
+            // Set the configuration based on the code
+            config = configurations[code];
+            clues = config.clues;
+
             // Initialize map with location for Delft
-            initMap(locationMap[code].lat, locationMap[code].lng);
+            initMap(52.0116, 4.3556);
             document.getElementById('map').style.display = 'block';
             document.querySelector('.container').style.display = 'none';
             document.getElementById('clueSection').style.display = 'block';
             document.getElementById('toolbox').style.display = 'block';
-            
+
             showTutorial();
         } else {
             // Show error message if code is incorrect
@@ -250,7 +317,7 @@ function startPracticeMode() {
             }
         }
     });
-  
+
     // Add event listener to the "Skip Practice" button
     skipButton.addEventListener('click', function handleSkipPractice() {
         modal.style.display = 'none'; // Close the practice modal
@@ -270,6 +337,8 @@ function getSelectedLayers() {
     return selectedLayers;
 }
 
+
+// Function to initialize the map
 function initMap(lat, lng) {
     map = L.map('map', { zoomControl: false }).setView([lat, lng], 12);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -277,45 +346,41 @@ function initMap(lat, lng) {
     }).addTo(map);
     L.marker([lat, lng]).addTo(map);
 
-    // Fetch and add Delft GeoJSON layers
-    fetchGeoJSON('https://raw.githubusercontent.com/mixalismix-dr/Directors/refs/heads/main/delft_buildings.geojson', buildingsLayer, {
+    // Fetch and add GeoJSON layers based on the configuration
+    fetchGeoJSON(config.geoJSONUrls.buildings, buildingsLayer, {
         color: '#ff7800', weight: 2, opacity: 1, fillOpacity: 0.2, fillColor: '#ff7800'
     });
 
-    fetchGeoJSON('https://raw.githubusercontent.com/mixalismix-dr/Directors/refs/heads/main/delft_green_space2.geojson', greenSpacesLayer, {
+    fetchGeoJSON(config.geoJSONUrls.greenSpaces, greenSpacesLayer, {
         color: '#00ff00', weight: 2, opacity: 1, fillOpacity: 0.2, fillColor: '#00ff00'
     });
 
-    fetchGeoJSON('https://raw.githubusercontent.com/mixalismix-dr/Directors/refs/heads/main/delft_water1.geojson', waterLayer, {
+    fetchGeoJSON(config.geoJSONUrls.water, waterLayer, {
         color: '#0000ff', weight: 2, opacity: 1, fillOpacity: 0.2, fillColor: '#0000ff'
     });
-  
-    fetchGeoJSON('https://raw.githubusercontent.com/mixalismix-dr/Directors/refs/heads/main/delft_trees1.geojson', treesLayer, {
+
+    fetchGeoJSON(config.geoJSONUrls.trees, treesLayer, {
         pointToLayer: function (feature, latlng) {
             return L.circleMarker(latlng, {
-                radius: 6,               // Size of the circle marker
-                fillColor: '#32CD32',    // Lime green fill
-                color: '#006400',        // Dark green border
-                weight: 1,               // Border thickness
+                radius: 6,
+                fillColor: '#32CD32',
+                color: '#006400',
+                weight: 1,
                 opacity: 1,
-                fillOpacity: 0.8         // Transparency of the fill color
+                fillOpacity: 0.8
             });
         }
     });
 
-    // Add the grid without showing it in the control
-    fetchGeoJSON('https://raw.githubusercontent.com/mixalismix-dr/Directors/refs/heads/main/delft_new_grid.geojson', null, {
+    fetchGeoJSON(config.geoJSONUrls.grid, null, {
         color: '#1E90FF', weight: 3, opacity: 1, fillOpacity: 0.2, fillColor: '1E90FF'
     });
 
     // Define the correct bounds in WGS84 (lon, lat) based on RD New converted values
-    correctBounds = [
-        [51.9974075300547085, 4.3790828918529110], // Bottom-left (southwest corner)
-        [52.0107348250441390, 4.4012403868448802]  // Top-right (northeast corner)
-    ];
+    correctBounds = config.correctBounds
 
     // Add the event listener for map clicks to check bounds
-    map.on('click', function(e) {
+    map.on('click', function (e) {
         handleMapClick(e.latlng);
     });
 
@@ -330,17 +395,17 @@ function initMap(lat, lng) {
     map.invalidateSize();
 
     // Handle window resize to resize the map properly
-    window.addEventListener('resize', function() {
+    window.addEventListener('resize', function () {
         map.invalidateSize();
     });
 
     // Ensure the map is properly resized initially
-    setTimeout(function() {
+    setTimeout(function () {
         map.invalidateSize();
     }, 0);
 }
 
-// Updated fetchGeoJSON function to set up tree click events after loading trees layer
+// Function to fetch GeoJSON data
 function fetchGeoJSON(url, layerGroup, options = {}) {
     fetch(url)
         .then(response => response.json())
@@ -360,7 +425,7 @@ function fetchGeoJSON(url, layerGroup, options = {}) {
         });
 }
 
-// Function to handle click events and check if they are within the bounds
+// Function to handle map clicks and check bounds
 function handleMapClick(latlng) {
     const sw = L.latLng(correctBounds[0]);
     const ne = L.latLng(correctBounds[1]);
@@ -371,7 +436,7 @@ function handleMapClick(latlng) {
         map.fitBounds(bounds);
         showMessage("🎉  Goed gedaan! Je hebt in het juiste gebied geklikt! Ga nu naar de eerste hint onderaan het scherm (klik op nummer 1)");
         hasZoomedToBounds = true;
-    } else if (!bounds.contains(latlng)){
+    } else if (!bounds.contains(latlng)) {
         showMessage("Oeps! Probeer opnieuw, detective!");
     }
 }
@@ -383,7 +448,7 @@ function showMessage(text) {
     messageElement.style.display = 'block';
     setTimeout(() => {
         messageElement.style.display = 'none';
-    }, 10000);  // Hide the message after 3 seconds
+    }, 10000);  // Hide the message after 10 seconds
 }
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -436,6 +501,56 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 });
 
+
+
+// Show or hide the buffer modal when the "Create Buffer" button is clicked
+document.getElementById('createBufferButton').addEventListener('click', function () {
+    const bufferModal = document.getElementById('bufferDistanceModal');
+    console.log(bufferModal.style.display);
+    // Check the current display style and toggle between 'block' and 'none'
+    if (bufferModal.style.display === 'none' || bufferModal.style.display === '') {
+        bufferModal.style.display = 'block';  // Show the modal
+        console.log('here');
+    } else {
+        bufferModal.style.display = 'none';
+    }
+});
+
+// Handle buffer selection logic
+document.getElementById('bufferDistance').addEventListener('change', function () {
+    const selectedValue = parseInt(this.value);  // Convert the selected value to an integer
+    const bufferMessage = document.getElementById('bufferMessage');
+
+    bufferMessage.textContent = "";  // Clear any previous messages
+    bufferMessage.classList.remove('valid', 'invalid');
+
+    if (selectedValue === config.bufferDistance) {
+        // Correct distance
+        bufferMessage.textContent = "Goed gedaan! Selecteer nu je school om er een buffer omheen te maken.";
+        bufferMessage.classList.add('valid');
+        selectedBufferDistance = selectedValue; // Set selectedBufferDistance to 100
+    } else {
+        bufferMessage.textContent = "Jammer, dit is de verkeerde afstand! Selecteer de juiste afstand.";
+        bufferMessage.classList.add('invalid');
+        selectedBufferDistance = null;  // Reset selectedBufferDistance for any other input
+    }
+});
+
+// Show or hide the tree quiz modal when the "Tree Quiz" button is clicked
+document.getElementById('treeQuizButton').addEventListener('click', function () {
+    const treeQuizModal = document.getElementById('treeQuizModal');
+    treeQuizModal.style.display = treeQuizModal.style.display === 'block' ? 'none' : 'block';
+});
+
+// Add event listeners to each tree count button
+document.querySelectorAll('.tree-quiz-option').forEach(button => {
+    button.addEventListener('click', function () {
+        const selectedValue = parseInt(this.getAttribute('data-value'));
+        checkTreeCount(selectedValue); // Check the selected answer
+    });
+});
+
+// Function to unlock a clue
 function unlockClue(clueNumber) {
     // Ensure the previous clue is unlocked before unlocking this one
     if (clueNumber > 1 && !clueStatus[clueNumber - 1]) {
@@ -460,183 +575,9 @@ function unlockClue(clueNumber) {
     }
 }
 
-document.querySelectorAll('.clue-btn').forEach((button) => {
-    button.addEventListener('click', function () {
-        const clueNumber = parseInt(this.getAttribute('data-clue'));
-        if (!clueStatus[clueNumber]) {
-            console.warn(`Clue ${clueNumber} is locked.`);
-            return; // Prevent locked clues from being accessed
-        }
-
-        // Display the clue
-        document.getElementById('clueDisplay').textContent = clues[clueNumber];
-
-        // Indicate the active clue
-        document.querySelectorAll('.clue-btn').forEach((btn) => {
-            btn.style.backgroundColor = '#0066cc'; // Reset to default
-        });
-        this.style.backgroundColor = '#90EE90'; // Highlight the active clue
-    });
-});
-
-
-
-// Show or hide the buffer modal when the "Create Buffer" button is clicked
-document.getElementById('createBufferButton').addEventListener('click', function () {
-    const bufferModal = document.getElementById('bufferDistanceModal');
-    console.log(bufferModal.style.display);
-    // Check the current display style and toggle between 'block' and 'none'
-    if (bufferModal.style.display === 'none' || bufferModal.style.display === '') {
-        bufferModal.style.display = 'block';  // Show the modal
-      console.log('here');
-    } else {
-        bufferModal.style.display = 'none';
-    }
-});
-
-
-// Handle buffer selection logic
-document.getElementById('bufferDistance').addEventListener('change', function () {
-    const selectedValue = parseInt(this.value);  // Convert the selected value to an integer
-    const bufferMessage = document.getElementById('bufferMessage');
-
-    bufferMessage.textContent = "";  // Clear any previous messages
-    bufferMessage.classList.remove('valid', 'invalid');
-
-    if (selectedValue === 100) {
-        // Correct distance
-        bufferMessage.textContent = "Goed gedaan! Selecteer nu je school om er een buffer omheen te maken.";
-        bufferMessage.classList.add('valid');
-        selectedBufferDistance = selectedValue; // Set selectedBufferDistance to 100
-    } else if (selectedValue === 200 || selectedValue === 300) {
-        // Incorrect distance
-        bufferMessage.textContent = "Jammer dit is de verkeerde afstand! Selecteer de juiste afstand.";
-        bufferMessage.classList.add('invalid');
-        selectedBufferDistance = null;  // Reset selectedBufferDistance if incorrect
-    } else {
-        bufferMessage.textContent = "";
-        selectedBufferDistance = null;  // Reset selectedBufferDistance for any other input
-    }
-});
-
-    // Show or hide the tree quiz modal when the "Tree Quiz" button is clicked
-document.getElementById('treeQuizButton').addEventListener('click', function () {
-  const treeQuizModal = document.getElementById('treeQuizModal');
-  treeQuizModal.style.display = treeQuizModal.style.display === 'block' ? 'none' : 'block';
-});
-
-// Add event listeners to each tree count button
-document.querySelectorAll('.tree-quiz-option').forEach(button => {
-  button.addEventListener('click', function () {
-    const selectedValue = parseInt(this.getAttribute('data-value'));
-    checkTreeCount(selectedValue); // Check the selected answer
-  });
-});
-
-function checkTreeCount(selectedCount) {
-    const treeQuizMessage = document.getElementById('treeQuizMessage');
-
-    // Clear previous message classes
-    treeQuizMessage.classList.remove('success', 'warning');
-
-    if (selectedCount === 15) {
-        // Correct answer
-        treeQuizMessage.textContent = "🎉 Gefeliciteerd! Je hebt de meester nu echt bijna gevonden. Pak je mobiel en navigeer naar de plek met de volgende coördinaten: 52.004444, 4.396111. TIP: gebruik “openstreetmap” of “google maps” op je telefoon om naar deze plek te gaan. LET OP de punten en komma moeten op de juiste plaats staan";
-        treeQuizMessage.classList.add('success');
-    } else {
-        // Incorrect answer
-        treeQuizMessage.textContent = "🤔 Jammer, nog een keer tellen! Hoeveel bomen waren er?";
-        treeQuizMessage.classList.add('warning');
-
-        // Set a timeout only for incorrect answers
-        setTimeout(() => {
-            treeQuizMessage.textContent = ''; // Clear message after 3 seconds
-        }, 15000);
-    }
-}
-
-
-document.addEventListener('DOMContentLoaded', function () {
-    // Ensure the button click is bound after the DOM fully loads
-    document.getElementById('filterSchoolsButton').addEventListener('click', function () {
-        console.log("Filter Schools button clicked"); // Debugging output to confirm click
-        filterSchools();
-    });
-});
-
-
-// Modify the filterSchools function to include the success message
-function filterSchools() {
-    console.log("Filter Schools function started");
-
-    // Remove previous school layer if it exists to avoid duplicate layers
-    if (schoolsLayer) {
-        map.removeLayer(schoolsLayer);
-    }
-
-    // Initialize a new layer group for schools
-    schoolsLayer = L.layerGroup();
-
-    fetch('https://raw.githubusercontent.com/mixalismix-dr/Directors/refs/heads/main/school_delft.geojson')
-        .then(response => {
-            if (!response.ok) {
-                console.error('Error fetching the GeoJSON data:', response.statusText);
-                return;
-            }
-            return response.json();
-        })
-        .then(data => {
-            console.log("Fetched data:", data); // Debugging: confirms data retrieval
-            L.geoJSON(data, {
-                style: {
-                    color: '#FFD700',  // Gold border color
-                    weight: 2,
-                    opacity: 1,
-                    fillOpacity: 0.7,
-                    fillColor: '#FFEC8B'  // Light yellow fill color
-                }
-            }).addTo(schoolsLayer);
-
-            // Add the layer to the map
-            schoolsLayer.addTo(map);
-      
-            // Attach click event to each school feature to create buffer
-            schoolsLayer.eachLayer(layer => {
-                layer.on('click', function() {
-                    createSchoolBuffer();
-                });
-            });
-
-            // Display the success message for moving to the next hint
-            displayHintMessage("Well done! Now go to hint 2");
-        })
-        .catch(error => {
-            console.error('Error fetching or displaying schools GeoJSON data:', error);
-        });
-}
-
-
-// Bind the clearMap function to the clearMapButton click event
-document.getElementById('clearMapButton').addEventListener('click', function () {
-    console.log("Clear Map button clicked"); // Debugging output
-    clearMap();
-});
-
-// Function to clear all layers except the base map
-function clearMap() {
-    // Remove all layers except the base map layer
-    if (map.hasLayer(buildingsLayer)) map.removeLayer(buildingsLayer);
-    if (map.hasLayer(greenSpacesLayer)) map.removeLayer(greenSpacesLayer);
-    if (map.hasLayer(waterLayer)) map.removeLayer(waterLayer);
-    if (map.hasLayer(treesLayer)) map.removeLayer(treesLayer);
-    if (map.hasLayer(schoolsLayer)) map.removeLayer(schoolsLayer);
-    if (map.hasLayer(bufferLayer)) map.removeLayer(bufferLayer);
-    if (map.hasLayer(ShopsLayer)) map.removeLayer(ShopsLayer);
-}
-
-
+// Function to create a buffer around a school
 function createSchoolBuffer() {
-    if (selectedBufferDistance === 100) {
+    if (selectedBufferDistance === config.bufferDistance) {
         bufferLayer.clearLayers(); // Clear existing buffer if any
 
         schoolsLayer.eachLayer(layer => {
@@ -659,6 +600,105 @@ function createSchoolBuffer() {
     }
 }
 
+// Function to check the tree count in the quiz
+function checkTreeCount(selectedCount) {
+    const treeQuizMessage = document.getElementById('treeQuizMessage');
+
+    // Clear previous message classes
+    treeQuizMessage.classList.remove('success', 'warning');
+
+    if (selectedCount === config.treeCount) {
+        // Correct answer
+        treeQuizMessage.textContent = "🎉 Gefeliciteerd! Je hebt de meester nu echt bijna gevonden. Pak je mobiel en navigeer naar de plek met de volgende coördinaten: 52.004444, 4.396111. TIP: gebruik “openstreetmap” of “google maps” op je telefoon om naar deze plek te gaan. LET OP de punten en komma moeten op de juiste plaats staan";
+        treeQuizMessage.classList.add('success');
+    } else {
+        // Incorrect answer
+        treeQuizMessage.textContent = "🤔 Jammer, nog een keer tellen! Hoeveel bomen waren er?";
+        treeQuizMessage.classList.add('warning');
+
+        // Set a timeout only for incorrect answers
+        setTimeout(() => {
+            treeQuizMessage.textContent = ''; // Clear message after 3 seconds
+        }, 15000);
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+    // Ensure the button click is bound after the DOM fully loads
+    document.getElementById('filterSchoolsButton').addEventListener('click', function () {
+        console.log("Filter Schools button clicked"); // Debugging output to confirm click
+        filterSchools();
+    });
+});
+
+// Function to filter schools
+function filterSchools() {
+    console.log("Filter Schools function started");
+
+    // Remove previous school layer if it exists to avoid duplicate layers
+    if (schoolsLayer) {
+        map.removeLayer(schoolsLayer);
+    }
+
+    // Initialize a new layer group for schools
+    schoolsLayer = L.layerGroup();
+
+    fetch(config.geoJSONUrls.schools)
+        .then(response => {
+            if (!response.ok) {
+                console.error('Error fetching the GeoJSON data:', response.statusText);
+                return;
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log("Fetched data:", data); // Debugging: confirms data retrieval
+            L.geoJSON(data, {
+                style: {
+                    color: '#FFD700',  // Gold border color
+                    weight: 2,
+                    opacity: 1,
+                    fillOpacity: 0.7,
+                    fillColor: '#FFEC8B'  // Light yellow fill color
+                }
+            }).addTo(schoolsLayer);
+
+            // Add the layer to the map
+            schoolsLayer.addTo(map);
+
+            // Attach click event to each school feature to create buffer
+            schoolsLayer.eachLayer(layer => {
+                layer.on('click', function () {
+                    createSchoolBuffer();
+                });
+            });
+
+            // Display the success message for moving to the next hint
+            showMessage("Well done! Now go to hint 2");
+        })
+        .catch(error => {
+            console.error('Error fetching or displaying schools GeoJSON data:', error);
+        });
+}
+
+// Bind the clearMap function to the clearMapButton click event
+document.getElementById('clearMapButton').addEventListener('click', function () {
+    console.log("Clear Map button clicked"); // Debugging output
+    clearMap();
+});
+
+// Function to clear all layers except the base map
+function clearMap() {
+    // Remove all layers except the base map layer
+    if (map.hasLayer(buildingsLayer)) map.removeLayer(buildingsLayer);
+    if (map.hasLayer(greenSpacesLayer)) map.removeLayer(greenSpacesLayer);
+    if (map.hasLayer(waterLayer)) map.removeLayer(waterLayer);
+    if (map.hasLayer(treesLayer)) map.removeLayer(treesLayer);
+    if (map.hasLayer(schoolsLayer)) map.removeLayer(schoolsLayer);
+    if (map.hasLayer(bufferLayer)) map.removeLayer(bufferLayer);
+    if (map.hasLayer(ShopsLayer)) map.removeLayer(ShopsLayer);
+}
+
 document.addEventListener('DOMContentLoaded', function () {
     // Bind the click event for filtering shops
     document.getElementById('filterShopsButton').addEventListener('click', function () {
@@ -676,7 +716,8 @@ function filterShops() {
 
     ShopsLayer = L.layerGroup();
 
-    fetch('https://raw.githubusercontent.com/mixalismix-dr/Directors/refs/heads/main/delft_shops.geojson')
+    // Use the GeoJSON URL for shops from the config object
+    fetch(config.geoJSONUrls.shops)
         .then(response => {
             if (!response.ok) {
                 console.error('Error fetching the GeoJSON data:', response.statusText);
@@ -699,31 +740,55 @@ function filterShops() {
                     let message;
                     let cssClass;
 
-                    // Define custom messages and CSS classes based on osm_id
-                    if (osmId === "45873478") {
-                        message = "<div class='shop-popup supermarket'>Dit is een <strong>supermarkt</strong>. Zoek de cadeauwinkel!</div>";
-                    } else if (osmId === "257247951") {
-                        message = "<div class='shop-popup electronics'>Dit is een <strong>electronica winkel</strong>. Zoek de cadeauwinkel!</div>";
-                     } else if (osmId === "257249975") {
-                        message = "<div class='shop-popup gift-shop'>Gefeliciteerd! <strong>Je hebt de cadeauwinkel gevonden!</strong> Ga nu naar de volgende hint (hint nummer 4)</div>";
+                    // Check if the OSM ID is in the config.shopOsmIds array
+                    if (config.shopOsmIds.includes(osmId)) {
+                        // Handle the first shop (supermarket)
+                        if (osmId === config.shopOsmIds[0]) {
+                            message = "<div class='shop-popup supermarket'>Dit is een <strong>supermarkt</strong>. Zoek de cadeauwinkel!</div>";
+                        }
+                        // Handle the second shop (electronics)
+                        else if (osmId === config.shopOsmIds[1]) {
+                            message = "<div class='shop-popup electronics'>Dit is een <strong>electronica winkel</strong>. Zoek de cadeauwinkel!</div>";
+                        }
+                        // Handle the third shop (electronics or gift shop, depending on the configuration)
+                        else if (osmId === config.shopOsmIds[2]) {
+                            if (config.shopOsmIds.length === 4) {
+                                // For 4 shops, the third shop is an electronics shop
+                                message = "<div class='shop-popup electronics'>Dit is een <strong>electronica winkel</strong>. Zoek de cadeauwinkel!</div>";
+                            } else {
+                                // For 3 shops, the third shop is the gift shop
+                                message = "<div class='shop-popup gift-shop'>Gefeliciteerd! <strong>Je hebt de cadeauwinkel gevonden!</strong> Ga nu naar de volgende hint (hint nummer 4)</div>";
 
-                        // Attach event listener to unlock Clue 4 on click
+                                // Attach event listener to unlock Clue 4 on click
+                                layer.on('click', function () {
+                                    unlockClue(4);
+                                });
+                            }
+                        }
+                        // Handle the fourth shop (gift shop, only for 4 shops)
+                        else if (config.shopOsmIds.length === 4 && osmId === config.shopOsmIds[3]) {
+                            message = "<div class='shop-popup gift-shop'>Gefeliciteerd! <strong>Je hebt de cadeauwinkel gevonden!</strong> Ga nu naar de volgende hint (hint nummer 4)</div>";
+
+                            // Attach event listener to unlock Clue 4 on click
+                            layer.on('click', function () {
+                                unlockClue(4);
+                            });
+                        }
+                    }
+
+                    // Bind the custom message with a CSS class to the popup
+                    if (message) {
+                        layer.bindPopup(message, { className: 'custom-popup' });
+
+                        // Open the popup when the shop is clicked
                         layer.on('click', function () {
-                            unlockClue(4);
+                            layer.openPopup();
+
+                            setTimeout(() => {
+                                map.closePopup(layer.getPopup());
+                            }, 5000);
                         });
                     }
-                    // Bind the custom message with a CSS class to the popup
-                    layer.bindPopup(message, { className: 'custom-popup' });
-
-                    // Open the popup when the shop is clicked
-                    layer.on('click', function () {
-                        layer.openPopup();
-                      
-                    setTimeout(() => {
-                        map.closePopup(layer.getPopup());
-                    }, 5000);
-
-                    });
                 }
             }).addTo(ShopsLayer);
 
@@ -734,9 +799,7 @@ function filterShops() {
         });
 }
 
-
 let correctSelectionCount = 0;
-const targetOsmIds = ["1067099777", "45878141"]; // IDs for the two correct green areas
 
 function onGreenSpaceFeature(feature, layer) {
     const osmId = feature.properties.osm_id;
@@ -744,7 +807,7 @@ function onGreenSpaceFeature(feature, layer) {
     // Attach click event listener to each green area layer
     layer.on('click', function () {
         // Check if the clicked area is one of the correct ones and hasn't been selected already
-        if (targetOsmIds.includes(osmId) && !layer._selected) {
+        if (config.greenAreaOsmIds.includes(osmId) && !layer._selected) {
             correctSelectionCount++;
             layer._selected = true; // Mark the layer as selected to prevent duplicate clicks
 
@@ -752,24 +815,25 @@ function onGreenSpaceFeature(feature, layer) {
             if (correctSelectionCount < 2) {
                 // Show progress message
                 message = `<div class='green-space-popup progress'>🎉 ${correctSelectionCount}/2 gebieden gevonden. Blijf zoeken!</div>`;
-                showMessageWithClass(message);          
+                showMessageWithClass(message);
             } else if (correctSelectionCount === 2) {
                 // Show congratulations message when both areas are found
                 message = `<div class='green-space-popup congratulations'>🎉 Gefeliciteerd! Je hebt beide groene gebieden in de buurt van de cadeauwinkel gevonden! Ga nu naar de volgende hint (hint nummer 5)</div>`;
                 showMessageWithClass(message);
-                unlockClue(5); 
-                
+                unlockClue(5);
+
                 // Reset selection for future interactions
                 correctSelectionCount = 0;
                 resetGreenAreaSelection(); // Reset the selected state on all areas
             }
-        } else if (!targetOsmIds.includes(osmId)) {
+        } else if (!config.greenAreaOsmIds.includes(osmId)) {
             // Feedback for incorrect selection
             let message = `<div class='green-space-popup warning'>🤔 Weet je zeker dat dit het juiste gebied is?</div>`;
             showMessageWithClass(message);
         }
     });
 }
+
 
 // Function to show messages with specific styles
 function showMessageWithClass(htmlContent) {
@@ -800,9 +864,8 @@ function resetGreenAreaSelection() {
     greenSpacesLayer.eachLayer(layer => {
         layer._selected = false; // Reset selected state on all green area layers
     });
-}
+}                       
 
-// Function to enable and display green spaces layer with selection
 function filterGreenSpaces() {
     console.log("Filter Green Spaces function started");
 
@@ -815,7 +878,7 @@ function filterGreenSpaces() {
     greenSpacesLayer = L.layerGroup();
 
     // Fetch the GeoJSON data for green spaces
-    fetch('https://raw.githubusercontent.com/mixalismix-dr/Directors/refs/heads/main/delft_green_space2.geojson')
+    fetch(config.geoJSONUrls.greenSpaces)
         .then(response => {
             if (!response.ok) {
                 console.error('Error fetching the GeoJSON data:', response.statusText);
@@ -923,7 +986,7 @@ function unhighlightAllTrees() {
             radius: 4  // Original radius
         });
     });
-    
+
     // Clear the highlighted trees array
     highlightedTrees = [];
 }
@@ -940,8 +1003,6 @@ function setupTreeClickEvents(geoJsonLayer) {
 
 // Call this function after treesLayer is loaded with GeoJSON data
 setupTreeClickEvents();
-
-
 
 
 
