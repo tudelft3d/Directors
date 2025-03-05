@@ -7,7 +7,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    background: url('https://raw.githubusercontent.com/mixalismix-dr/Directors/refs/heads/main/Keizerskroon/buildings.geojson')
+    background: url('https://raw.githubusercontent.com/mixalismix-dr/Directors/refs/heads/main/cover.png')
     background-size: cover;
 }
 
