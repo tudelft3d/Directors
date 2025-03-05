@@ -65,10 +65,10 @@ document.addEventListener('DOMContentLoaded', (event) => {
                     grid: 'https://raw.githubusercontent.com/mixalismix-dr/Directors/refs/heads/main/delft_new_grid.geojson'
                 },
                 clues: {
-                    1: "Meester Ton werd voor het laatst gezien in een gebouw ongeveer 300 meter van de school. Kun jij uitvinden welk gebouw een school is? Gebruik de juiste kaartlaag (rechtsboven) en de juiste opdrachtknop uit de gereedschapskist (linksboven).",
+                    1: "Meester Ton werd voor het laatst gezien in een gebouw in de buurt van de Keizerskroon. Kun jij uitvinden welk gebouw een school is? Gebruik de juiste kaartlaag (rechtsboven) en de juiste opdrachtknop uit de gereedschapskist (linksboven).",
                     2: "Meester Ton werd gezien bij een gebouw ongeveer 300 meter van de school. Gebruik de knop 'Buffer Maken', kies de juiste afstand en klik op de school om een buffer te maken.",
                     3: "Meester Ton werd gespot bij de cadeauwinkel. Gebruik de knop 'Filter Winkels' om winkels op de kaart te tonen en vind de cadeauwinkel!",
-                    4: "Geweldig, je bent een stapje dichterbij gekomen! De eigenaar van de cadeauwinkel heeft hem zien lopen richting een groot groen gebied vlakbij de cadeauwinkel. Gebruik 'Vind Dichtstbijzijnde Groene Gebieden' om de twee dichtstbijzijnde groene gebieden te vinden.",
+                    4: "Geweldig, je bent een stapje dichterbij gekomen! De eigenaar van de cadeauwinkel heeft hem zien lopen richting een groot groen gebied vlakbij de cadeauwinkel. Gebruik de juiste kaartlaag (rechtsboven) en gebruik 'Vind Dichtstbijzijnde Groene Gebieden' om de twee dichtstbijzijnde groene gebieden te vinden.",
                     5: "Nu moet je uitzoeken welk van deze twee groene gebieden de meeste bomen heeft want daar is meester Ton geweest. Selecteer de juiste kaartlaag (rechtsboven). Gebruik daarna de tool 'Bomenteller' om de bomen in elk gebied te tellen.",
                     6: "Bijna klaar! Nu je de bomen hebt geteld, open je de 'Bomen Quiz' en beantwoord je de vraag: Hoeveel bomen staan er in het groene gebied waar de meester is gezien?"
                 },
@@ -92,10 +92,10 @@ document.addEventListener('DOMContentLoaded', (event) => {
                     grid: 'https://raw.githubusercontent.com/mixalismix-dr/Directors/refs/heads/main/delft_new_grid.geojson'
                 },
                 clues: {
-                    1: "Meester Ton werd voor het laatst gezien in een gebouw ongeveer 100 meter van de school. Kun jij uitvinden welk gebouw een school is? Gebruik de juiste kaartlaag (rechtsboven) en de juiste opdrachtknop uit de gereedschapskist (linksboven).",
+                    1: "Meester Ton werd voor het laatst gezien in een gebouw dichtbij de Triangel. Kun jij uitvinden welk gebouw een school is? Gebruik de juiste kaartlaag (rechtsboven) en de juiste opdrachtknop uit de gereedschapskist (linksboven).",
                     2: "Meester Ton werd gezien bij een gebouw ongeveer 100 meter van de school. Gebruik de knop 'Buffer Maken', kies de juiste afstand en klik op de school om een buffer te maken.",
                     3: "Meester Ton werd gespot bij de cadeauwinkel. Gebruik de knop 'Filter Winkels' om winkels op de kaart te tonen en vind de cadeauwinkel!",
-                    4: "Geweldig, je bent een stapje dichterbij gekomen! De eigenaar van de cadeauwinkel heeft hem zien lopen richting een groot groen gebied vlakbij de cadeauwinkel. Gebruik 'Vind Dichtstbijzijnde Groene Gebieden' om de twee dichtstbijzijnde groene gebieden te vinden.",
+                    4: "Geweldig, je bent een stapje dichterbij gekomen! De eigenaar van de cadeauwinkel heeft hem zien lopen richting een groot groen gebied vlakbij de cadeauwinkel. Gebruik de juiste kaartlaag (rechtsboven) en gebruik 'Vind Dichtstbijzijnde Groene Gebieden' om de twee dichtstbijzijnde groene gebieden te vinden.",
                     5: "Nu moet je uitzoeken welk van deze twee groene gebieden de meeste bomen heeft want daar is meester Ton geweest. Selecteer de juiste kaartlaag (rechtsboven). Gebruik daarna de tool 'Bomenteller' om de bomen in elk gebied te tellen.",
                     6: "Bijna klaar! Nu je de bomen hebt geteld, open je de 'Bomen Quiz' en beantwoord je de vraag: Hoeveel bomen staan er in het groene gebied waar de meester is gezien?"
                 },
