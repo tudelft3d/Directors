@@ -1,4 +1,4 @@
-body { 
+body {
     font-family: 'Comic Neue', sans-serif;
     margin: 0;
     padding: 0;
@@ -7,7 +7,8 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    background: linear-gradient(135deg, #33ccff, #6699ff); /* Light blue to mid-blue gradient */
+    background: url('https://raw.githubusercontent.com/mixalismix-dr/Directors/refs/heads/main/Keizerskroon/buildings.geojson')
+    background-size: cover;
 }
 
 h1 {
