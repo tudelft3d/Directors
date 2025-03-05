@@ -8,8 +8,7 @@ body {
     justify-content: center;
     align-items: center;
     background: url('https://raw.githubusercontent.com/mixalismix-dr/Directors/refs/heads/main/cover.png');
-    background-size: contain;
-    background-color: #f0f8ff; /* Very light blue */
+    background-size: cover;
 
 }
 
