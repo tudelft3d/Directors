@@ -536,6 +536,12 @@ document.getElementById('bufferDistance').addEventListener('change', function ()
     }
 });
 
+
+document.getElementById('closeBufferModalButton').addEventListener('click', function () {
+    document.getElementById('bufferDistanceModal').style.display = 'none';
+});
+
+
 // Show or hide the tree quiz modal when the "Tree Quiz" button is clicked
 document.getElementById('treeQuizButton').addEventListener('click', function () {
     const treeQuizModal = document.getElementById('treeQuizModal');
