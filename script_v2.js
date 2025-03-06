@@ -943,16 +943,15 @@ let highlightedTrees = []; // Array to store highlighted trees
 
 // Event listener for the "Tree Counter" button
 document.getElementById('TreeCounterButton').addEventListener('click', function () {
-    // Toggle visibility of treesLayer
-    if (map.hasLayer(treesLayer)) {
-        map.removeLayer(treesLayer); // Remove layer if it's already on the map
-        document.getElementById('counterSection').style.display = 'none'; // Hide counter section
-    } else {
+    if (!map.hasLayer(treesLayer)) {
         map.addLayer(treesLayer); // Add layer if it's not on the map
         document.getElementById('counterSection').style.display = 'block'; // Show counter section
         unlockClue(6);
+    } else {
+        showMessage("De bomenlaag staat al aan!"); // Optional feedback
     }
 });
+
 
 document.getElementById('resetCounterButton').addEventListener('click', resetCounter);
 
