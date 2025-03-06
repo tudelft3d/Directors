@@ -947,8 +947,6 @@ document.getElementById('TreeCounterButton').addEventListener('click', function 
         map.addLayer(treesLayer); // Add layer if it's not on the map
         document.getElementById('counterSection').style.display = 'block'; // Show counter section
         unlockClue(6);
-    } else {
-        showMessage("De bomenlaag staat al aan!"); // Optional feedback
     }
 });
 
