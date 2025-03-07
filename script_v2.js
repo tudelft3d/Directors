@@ -953,6 +953,18 @@ document.getElementById('TreeCounterButton').addEventListener('click', function 
 
 document.getElementById('resetCounterButton').addEventListener('click', resetCounter);
 
+
+document.getElementById('closeCounterButton').addEventListener('click', function () {
+    document.getElementById('counterSection').style.display = 'none';
+});
+
+document.getElementById('closeTreeQuizButton').addEventListener('click', function () {
+    document.getElementById('treeQuizModal').style.display = 'none';
+});
+
+
+
+
 // Function to increment the tree counter
 function incrementCounter() {
     treeClickCounter++;
@@ -1006,6 +1018,3 @@ function setupTreeClickEvents(geoJsonLayer) {
 
 // Call this function after treesLayer is loaded with GeoJSON data
 setupTreeClickEvents();
-
-
-
