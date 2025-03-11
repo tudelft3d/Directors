@@ -64,14 +64,15 @@ document.addEventListener('DOMContentLoaded', (event) => {
                     shops: 'https://raw.githubusercontent.com/mixalismix-dr/Directors/refs/heads/main/Keizerskroon/shops.geojson',
                     grid: 'https://raw.githubusercontent.com/mixalismix-dr/Directors/refs/heads/main/delft_new_grid.geojson'
                 },
-                clues: {
-                    1: "Meester Ton werd voor het laatst gezien in een gebouw in de buurt van de Keizerskroon. Kun jij uitvinden welk gebouw een school is? Gebruik de juiste kaartlaag (rechtsboven) en de juiste opdrachtknop uit de gereedschapskist (linksboven).",
-                    2: "Meester Ton werd gezien bij een gebouw ongeveer 300 meter van de school. Gebruik de knop 'Buffer Maken', kies de juiste afstand en klik op de school om een buffer te maken.",
-                    3: "Meester Ton werd gespot bij de cadeauwinkel. Gebruik de knop 'Filter Winkels' om winkels op de kaart te tonen en vind de cadeauwinkel!",
-                    4: "Geweldig, je bent een stapje dichterbij gekomen! De eigenaar van de cadeauwinkel heeft hem zien lopen richting een groot groen gebied vlakbij de cadeauwinkel. Gebruik de juiste kaartlaag (rechtsboven) en gebruik 'Vind Dichtstbijzijnde Groene Gebieden' om de twee dichtstbijzijnde groene gebieden te vinden.",
-                    5: "Nu moet je uitzoeken welk van deze twee groene gebieden de meeste bomen heeft want daar is meester Ton geweest. Selecteer de juiste kaartlaag (rechtsboven). Gebruik daarna de tool 'Bomenteller' om de bomen in elk gebied te tellen.",
-                    6: "Bijna klaar! Nu je de bomen hebt geteld, open je de 'Bomen Quiz' en beantwoord je de vraag: Hoeveel bomen staan er in het groene gebied waar de meester is gezien?"
-                },
+                clues = {
+                    1: "De docent werd voor het laatst gezien in een gebouw in de buurt van de Keizerskroon. Kun jij uitvinden welk gebouw een school is? Gebruik de juiste kaartlaag (rechtsboven) en de juiste opdrachtknop uit de gereedschapskist (linksboven).",
+                    2: "De docent werd gezien bij een gebouw ongeveer 300 meter van de school. Gebruik de knop 'Buffer Maken', kies de juiste afstand en klik op de school om een buffer te maken.",
+                    3: "De docent werd gespot bij de cadeauwinkel. Gebruik de knop 'Filter Winkels' om winkels op de kaart te tonen en vind de cadeauwinkel!",
+                    4: "Geweldig, je bent een stapje dichterbij gekomen! De eigenaar van de cadeauwinkel heeft hem zien lopen richting een groot groen gebied vlakbij de basketbalvelden. Gebruik de juiste kaartlaag (rechtsboven) en gebruik 'Vind Dichtstbijzijnde Groene Gebieden' om de twee grootste groene gebieden dicht bij de basketbalvelden te vinden.",
+                    5: "Nu moet je uitzoeken welk van deze twee groene gebieden de meeste bomen heeft, want daar is de docent geweest. Selecteer de juiste kaartlaag (rechtsboven). Gebruik daarna de tool 'Bomenteller' om de bomen in elk gebied te tellen.",
+                    6: "Bijna klaar! Nu je de bomen hebt geteld, open je de 'Bomen Quiz' en beantwoord je de vraag: Hoeveel bomen staan er in het groene gebied waar de docent is gezien?"
+                };
+
                 correctBounds: [
                     [52.01106096916104, 4.422754471047392],
                     [51.99774482575294, 4.444944031251278]
@@ -86,7 +87,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
                     buildings: 'https://raw.githubusercontent.com/mixalismix-dr/Directors/refs/heads/main/delft_buildings.geojson',
                     greenSpaces: 'https://raw.githubusercontent.com/mixalismix-dr/Directors/refs/heads/main/delft_green_space2.geojson',
                     water: 'https://raw.githubusercontent.com/mixalismix-dr/Directors/refs/heads/main/delft_water1.geojson',
-                    trees: 'https://raw.githubusercontent.com/mixalismix-dr/Directors/refs/heads/main/delft_trees1.geojson',
+                    trees: 'https://raw.githubusercontent.com/mixalismix-dr/Directors/refs/heads/main/delft_trees2.geojson',
                     schools: 'https://raw.githubusercontent.com/mixalismix-dr/Directors/refs/heads/main/school_delft.geojson',
                     shops: 'https://raw.githubusercontent.com/mixalismix-dr/Directors/refs/heads/main/delft_shops.geojson',
                     grid: 'https://raw.githubusercontent.com/mixalismix-dr/Directors/refs/heads/main/delft_new_grid.geojson'
@@ -573,6 +574,10 @@ function unlockClue(clueNumber) {
         button.innerHTML = clueNumber; // Replace lock icon with the clue number
         clueStatus[clueNumber] = true; // Mark this clue as unlocked
 
+        if (clueNumber === 3) {
+            document.getElementById('bufferDistanceModal').style.display = 'none';
+        }
+
         // Optional: Add unlock animation
         button.classList.add("unlock-animation");
         setTimeout(() => {
@@ -945,9 +950,9 @@ let highlightedTrees = []; // Array to store highlighted trees
 document.getElementById('TreeCounterButton').addEventListener('click', function () {
     if (!map.hasLayer(treesLayer)) {
         map.addLayer(treesLayer); // Add layer if it's not on the map
-        document.getElementById('counterSection').style.display = 'block'; // Show counter section
-        unlockClue(6);
     }
+    document.getElementById('counterSection').style.display = 'block'; // Always show counter section
+    unlockClue(6);
 });
 
 
@@ -1006,11 +1011,17 @@ function unhighlightAllTrees() {
     highlightedTrees = [];
 }
 
+
 function setupTreeClickEvents(geoJsonLayer) {
     geoJsonLayer.eachLayer(layer => {
+        layer._counted = false; // Track if the tree was counted
+
         layer.on('click', function (e) {
-            highlightTree(layer); // Highlight tree on click
-            incrementCounter(); // Increment the counter
+            if (!layer._counted) {  // Only count if not previously counted
+                highlightTree(layer);
+                incrementCounter();
+                layer._counted = true;  // Mark tree as counted
+            }
             e.originalEvent.stopPropagation(); // Prevents map click propagation
         });
     });
