@@ -64,7 +64,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
                     shops: 'https://raw.githubusercontent.com/mixalismix-dr/Directors/refs/heads/main/Keizerskroon/shops.geojson',
                     grid: 'https://raw.githubusercontent.com/mixalismix-dr/Directors/refs/heads/main/delft_new_grid.geojson'
                 },
-                clues = {
+                clues: {
                     1: "De docent werd voor het laatst gezien in een gebouw in de buurt van de Keizerskroon. Kun jij uitvinden welk gebouw een school is? Gebruik de juiste kaartlaag (rechtsboven) en de juiste opdrachtknop uit de gereedschapskist (linksboven).",
                     2: "De docent werd gezien bij een gebouw ongeveer 300 meter van de school. Gebruik de knop 'Buffer Maken', kies de juiste afstand en klik op de school om een buffer te maken.",
                     3: "De docent werd gespot bij de cadeauwinkel. Gebruik de knop 'Filter Winkels' om winkels op de kaart te tonen en vind de cadeauwinkel!",
