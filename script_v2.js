@@ -71,7 +71,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
                     4: "Geweldig, je bent een stapje dichterbij gekomen! De eigenaar van de cadeauwinkel heeft hem zien lopen richting een groot groen gebied vlakbij de basketbalvelden. Gebruik de juiste kaartlaag (rechtsboven) en gebruik 'Vind Dichtstbijzijnde Groene Gebieden' om de twee grootste groene gebieden dicht bij de basketbalvelden te vinden.",
                     5: "Nu moet je uitzoeken welk van deze twee groene gebieden de meeste bomen heeft, want daar is de docent geweest. Selecteer de juiste kaartlaag (rechtsboven). Gebruik daarna de tool 'Bomenteller' om de bomen in elk gebied te tellen.",
                     6: "Bijna klaar! Nu je de bomen hebt geteld, open je de 'Bomen Quiz' en beantwoord je de vraag: Hoeveel bomen staan er in het groene gebied waar de docent is gezien?"
-                };
+                },
 
                 correctBounds: [
                     [52.01106096916104, 4.422754471047392],
