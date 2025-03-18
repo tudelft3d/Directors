@@ -60,7 +60,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
                     greenSpaces: 'https://raw.githubusercontent.com/mixalismix-dr/Directors/refs/heads/main/Keizerskroon/green_space4.geojson',
                     water: 'https://raw.githubusercontent.com/mixalismix-dr/Directors/refs/heads/main/Keizerskroon/water.geojson',
                     trees: 'https://raw.githubusercontent.com/mixalismix-dr/Directors/refs/heads/main/Keizerskroon/trees4.geojson',
-                    schools: 'https://raw.githubusercontent.com/mixalismix-dr/Directors/refs/heads/main/school1.geojson',
+                    schools: 'https://raw.githubusercontent.com/mixalismix-dr/Directors/refs/heads/main/school2.geojson',
                     shops: 'https://raw.githubusercontent.com/mixalismix-dr/Directors/refs/heads/main/Keizerskroon/shops.geojson',
                     grid: 'https://raw.githubusercontent.com/mixalismix-dr/Directors/refs/heads/main/delft_new_grid.geojson'
                 },
@@ -68,7 +68,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
                     1: "De docent werd voor het laatst gezien in een gebouw in de buurt van de Keizerskroon. Kun jij uitvinden welk gebouw een school is? Gebruik de juiste kaartlaag (rechtsboven) en de juiste opdrachtknop uit de gereedschapskist (linksboven).",
                     2: "De docent werd gezien bij een gebouw ongeveer 300 meter van de school. Gebruik de knop 'Buffer Maken', kies de juiste afstand en klik op de school om een buffer te maken.",
                     3: "De docent werd gespot bij de cadeauwinkel. Gebruik de knop 'Filter Winkels' om winkels op de kaart te tonen en vind de cadeauwinkel!",
-                    4: "Geweldig, je bent een stapje dichterbij gekomen! De eigenaar van de cadeauwinkel heeft hem zien lopen richting een groot groen gebied vlakbij de basketbalvelden. Gebruik de juiste kaartlaag (rechtsboven) en gebruik 'Vind Dichtstbijzijnde Groene Gebieden' om de twee grootste groene gebieden dicht bij de basketbalvelden te vinden.",
+                    4: "Geweldig, je bent een stapje dichterbij gekomen! De eigenaar van de cadeauwinkel heeft hem zien lopen richting een groot groen gebied vlakbij de voetbalveldjes. Gebruik de juiste kaartlaag (rechtsboven) en gebruik 'Vind Dichtstbijzijnde Groene Gebieden' om de twee grootste groene gebieden dicht bij de voetbalvelden te vinden.",
                     5: "Nu moet je uitzoeken welk van deze twee groene gebieden de meeste bomen heeft, want daar is de docent geweest. Selecteer de juiste kaartlaag (rechtsboven). Gebruik daarna de tool 'Bomenteller' om de bomen in elk gebied te tellen.",
                     6: "Bijna klaar! Nu je de bomen hebt geteld, open je de 'Bomen Quiz' en beantwoord je de vraag: Hoeveel bomen staan er in het groene gebied waar de docent is gezien?"
                 },
@@ -76,7 +76,8 @@ document.addEventListener('DOMContentLoaded', (event) => {
                 correctBounds: [
                     [52.01106096916104, 4.422754471047392],
                     [51.99774482575294, 4.444944031251278]
-                ]
+                ],
+                successMessage: "🎉 Gefeliciteerd! Je hebt de meester nu echt bijna gevonden. Pak je mobiel en navigeer naar de plek met de volgende coördinaten: **52.002490, 4.437897**. TIP: gebruik “openstreetmap” of “google maps” op je telefoon om naar deze plek te gaan. LET OP de punten en komma moeten op de juiste plaats staan."
             },
             '1599': {
                 bufferDistance: 100,
@@ -103,7 +104,8 @@ document.addEventListener('DOMContentLoaded', (event) => {
                 correctBounds: [
                     [51.9974075300547085, 4.3790828918529110],
                     [52.0107348250441390, 4.4012403868448802]
-                ]
+                ],
+                successMessage: "🎉 Gefeliciteerd! Je hebt de meester nu echt bijna gevonden. Pak je mobiel en navigeer naar de plek met de volgende coördinaten: **52.004444, 4.396111**. TIP: gebruik “openstreetmap” of “google maps” op je telefoon om naar deze plek te gaan. LET OP de punten en komma moeten op de juiste plaats staan."
             }
         };
 
@@ -619,8 +621,8 @@ function checkTreeCount(selectedCount) {
     treeQuizMessage.classList.remove('success', 'warning');
 
     if (selectedCount === config.treeCount) {
-        // Correct answer
-        treeQuizMessage.textContent = "🎉 Gefeliciteerd! Je hebt de meester nu echt bijna gevonden. Pak je mobiel en navigeer naar de plek met de volgende coördinaten: 52.004444, 4.396111. TIP: gebruik “openstreetmap” of “google maps” op je telefoon om naar deze plek te gaan. LET OP de punten en komma moeten op de juiste plaats staan";
+        // Use success message from the configuration
+        treeQuizMessage.textContent = config.successMessage;
         treeQuizMessage.classList.add('success');
     } else {
         // Incorrect answer
@@ -633,6 +635,7 @@ function checkTreeCount(selectedCount) {
         }, 15000);
     }
 }
+
 
 document.addEventListener('DOMContentLoaded', function () {
     // Ensure the button click is bound after the DOM fully loads
