@@ -60,7 +60,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
                     greenSpaces: 'https://raw.githubusercontent.com/mixalismix-dr/Directors/refs/heads/main/Keizerskroon/green_space4.geojson',
                     water: 'https://raw.githubusercontent.com/mixalismix-dr/Directors/refs/heads/main/Keizerskroon/water.geojson',
                     trees: 'https://raw.githubusercontent.com/mixalismix-dr/Directors/refs/heads/main/Keizerskroon/trees4.geojson',
-                    schools: 'https://raw.githubusercontent.com/mixalismix-dr/Directors/refs/heads/main/school2.geojson',
+                    schools: 'https://raw.githubusercontent.com/mixalismix-dr/Directors/refs/heads/main/Keizerskroon/school2.geojson',
                     shops: 'https://raw.githubusercontent.com/mixalismix-dr/Directors/refs/heads/main/Keizerskroon/shops.geojson',
                     grid: 'https://raw.githubusercontent.com/mixalismix-dr/Directors/refs/heads/main/delft_new_grid.geojson'
                 },
