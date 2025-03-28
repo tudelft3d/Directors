@@ -65,12 +65,12 @@ document.addEventListener('DOMContentLoaded', (event) => {
                     grid: 'https://raw.githubusercontent.com/mixalismix-dr/Directors/refs/heads/main/delft_new_grid.geojson'
                 },
                 clues: {
-                    1: "De docent werd voor het laatst gezien in een gebouw in de buurt van de Keizerskroon. Kun jij uitvinden welk gebouw een school is? Gebruik de juiste kaartlaag (rechtsboven) en de juiste opdrachtknop uit de gereedschapskist (linksboven).",
-                    2: "De docent werd gezien bij een gebouw ongeveer 300 meter van de school. Gebruik de knop 'Buffer Maken', kies de juiste afstand en klik op de school om een buffer te maken.",
-                    3: "De docent werd gespot bij de cadeauwinkel. Gebruik de knop 'Filter Winkels' om winkels op de kaart te tonen en vind de cadeauwinkel!",
+                    1: "Meester Bemmel werd voor het laatst gezien in een gebouw in de buurt van de Keizerskroon. Kun jij uitvinden welk gebouw een school is? Gebruik de juiste kaartlaag (rechtsboven) en de juiste opdrachtknop uit de gereedschapskist (linksboven).",
+                    2: "Meester Bemmel werd gezien bij een gebouw ongeveer 300 meter van de school. Gebruik de knop 'Buffer Maken', kies de juiste afstand en klik op de school om een buffer te maken.",
+                    3: "Meester Bemmel werd gespot bij de cadeauwinkel. Gebruik de knop 'Filter Winkels' om winkels op de kaart te tonen en vind de cadeauwinkel!",
                     4: "Geweldig, je bent een stapje dichterbij gekomen! De eigenaar van de cadeauwinkel heeft hem zien lopen richting een groot groen gebied vlakbij de voetbalveldjes. Gebruik de juiste kaartlaag (rechtsboven) en gebruik 'Vind Dichtstbijzijnde Groene Gebieden' om de twee grootste groene gebieden dicht bij de voetbalvelden te vinden.",
-                    5: "Nu moet je uitzoeken welk van deze twee groene gebieden de meeste bomen heeft, want daar is de docent geweest. Selecteer de juiste kaartlaag (rechtsboven). Gebruik daarna de tool 'Bomenteller' om de bomen in elk gebied te tellen.",
-                    6: "Bijna klaar! Nu je de bomen hebt geteld, open je de 'Bomen Quiz' en beantwoord je de vraag: Hoeveel bomen staan er in het groene gebied waar de docent is gezien?"
+                    5: "Nu moet je uitzoeken welk van deze twee groene gebieden de meeste bomen heeft, want daar is meester Bemmel geweest. Selecteer de juiste kaartlaag (rechtsboven). Gebruik daarna de tool 'Bomenteller' om de bomen in elk gebied te tellen.",
+                    6: "Bijna klaar! Nu je de bomen hebt geteld, open je de 'Bomen Quiz' en beantwoord je de vraag: Hoeveel bomen staan er in het groene gebied waar meester Bemmel is gezien?"
                 },
 
                 correctBounds: [
