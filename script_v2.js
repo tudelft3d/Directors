@@ -65,12 +65,12 @@ document.addEventListener('DOMContentLoaded', (event) => {
                     grid: 'https://raw.githubusercontent.com/mixalismix-dr/Directors/refs/heads/main/delft_new_grid.geojson'
                 },
                 clues: {
-                    1: "Meester Bemmel werd voor het laatst gezien in een gebouw in de buurt van de Keizerskroon. Kun jij uitvinden welk gebouw een school is? Gebruik de juiste kaartlaag (rechtsboven) en de juiste opdrachtknop uit de gereedschapskist (linksboven).",
-                    2: "Meester Bemmel werd gezien bij een gebouw ongeveer 300 meter van de school. Gebruik de knop 'Buffer Maken', kies de juiste afstand en klik op de school om een buffer te maken.",
-                    3: "Meester Bemmel werd gespot bij de cadeauwinkel. Gebruik de knop 'Filter Winkels' om winkels op de kaart te tonen en vind de cadeauwinkel!",
-                    4: "Geweldig, je bent een stapje dichterbij gekomen! De eigenaar van de cadeauwinkel heeft hem zien lopen richting een groot groen gebied vlakbij de voetbalveldjes. Gebruik de juiste kaartlaag (rechtsboven) en gebruik 'Vind Dichtstbijzijnde Groene Gebieden' om de twee grootste groene gebieden dicht bij de voetbalvelden te vinden.",
-                    5: "Nu moet je uitzoeken welk van deze twee groene gebieden de meeste bomen heeft, want daar is meester Bemmel geweest. Selecteer de juiste kaartlaag (rechtsboven). Gebruik daarna de tool 'Bomenteller' om de bomen in elk gebied te tellen.",
-                    6: "Bijna klaar! Nu je de bomen hebt geteld, open je de 'Bomen Quiz' en beantwoord je de vraag: Hoeveel bomen staan er in het groene gebied waar meester Bemmel is gezien?"
+                    1: "De leraar werd voor het laatst gezien in een gebouw in de buurt van de Keizerskroon. Kun jij uitvinden welk gebouw een school is? Gebruik de juiste kaartlaag (rechtsboven) en de juiste opdrachtknop uit de gereedschapskist (linksboven).",
+                    2: "De leraar werd gezien bij een gebouw ongeveer 300 meter van de school. Gebruik de knop 'Buffer Maken', kies de juiste afstand en klik op de school om een buffer te maken.",
+                    3: "De leraar werd gespot bij de cadeauwinkel. Gebruik de knop 'Filter Winkels' om winkels op de kaart te tonen en vind de cadeauwinkel!",
+                    4: "Geweldig, je bent een stapje dichterbij gekomen! De eigenaar van de cadeauwinkel heeft de leraar zien lopen richting een groot groen gebied vlakbij de voetbalveldjes. Gebruik de juiste kaartlaag (rechtsboven) en gebruik 'Vind Dichtstbijzijnde Groene Gebieden' om de twee grootste groene gebieden dicht bij de voetbalvelden te vinden.",
+                    5: "Nu moet je uitzoeken welk van deze twee groene gebieden de meeste bomen heeft, want daar is de leraar geweest. Selecteer de juiste kaartlaag (rechtsboven). Gebruik daarna de tool 'Bomenteller' om de bomen in elk gebied te tellen.",
+                    6: "Bijna klaar! Nu je de bomen hebt geteld, open je de 'Bomen Quiz' en beantwoord je de vraag: Hoeveel bomen staan er in het groene gebied waar de leraar is gezien?"
                 },
 
                 correctBounds: [
@@ -94,12 +94,12 @@ document.addEventListener('DOMContentLoaded', (event) => {
                     grid: 'https://raw.githubusercontent.com/mixalismix-dr/Directors/refs/heads/main/delft_new_grid.geojson'
                 },
                 clues: {
-                    1: "Meester Ton werd voor het laatst gezien in een gebouw dichtbij de Triangel. Kun jij uitvinden welk gebouw een school is? Gebruik de juiste kaartlaag (rechtsboven) en de juiste opdrachtknop uit de gereedschapskist (linksboven).",
-                    2: "Meester Ton werd gezien bij een gebouw ongeveer 100 meter van de school. Gebruik de knop 'Buffer Maken', kies de juiste afstand en klik op de school om een buffer te maken.",
-                    3: "Meester Ton werd gespot bij de cadeauwinkel. Gebruik de knop 'Filter Winkels' om winkels op de kaart te tonen en vind de cadeauwinkel!",
-                    4: "Geweldig, je bent een stapje dichterbij gekomen! De eigenaar van de cadeauwinkel heeft hem zien lopen richting een groot groen gebied vlakbij de cadeauwinkel. Gebruik de juiste kaartlaag (rechtsboven) en gebruik 'Vind Dichtstbijzijnde Groene Gebieden' om de twee dichtstbijzijnde groene gebieden te vinden.",
-                    5: "Nu moet je uitzoeken welk van deze twee groene gebieden de meeste bomen heeft want daar is meester Ton geweest. Selecteer de juiste kaartlaag (rechtsboven). Gebruik daarna de tool 'Bomenteller' om de bomen in elk gebied te tellen.",
-                    6: "Bijna klaar! Nu je de bomen hebt geteld, open je de 'Bomen Quiz' en beantwoord je de vraag: Hoeveel bomen staan er in het groene gebied waar de meester is gezien?"
+                    1: "De leraar werd voor het laatst gezien in een gebouw dichtbij de Triangel. Kun jij uitvinden welk gebouw een school is? Gebruik de juiste kaartlaag (rechtsboven) en de juiste opdrachtknop uit de gereedschapskist (linksboven).",
+                    2: "De leraar werd gezien bij een gebouw ongeveer 100 meter van de school. Gebruik de knop 'Buffer Maken', kies de juiste afstand en klik op de school om een buffer te maken.",
+                    3: "De leraar werd gespot bij de cadeauwinkel. Gebruik de knop 'Filter Winkels' om winkels op de kaart te tonen en vind de cadeauwinkel!",
+                    4: "Geweldig, je bent een stapje dichterbij gekomen! De eigenaar van de cadeauwinkel heeft de leraar zien lopen richting een groot groen gebied vlakbij de cadeauwinkel. Gebruik de juiste kaartlaag (rechtsboven) en gebruik 'Vind Dichtstbijzijnde Groene Gebieden' om de twee dichtstbijzijnde groene gebieden te vinden.",
+                    5: "Nu moet je uitzoeken welk van deze twee groene gebieden de meeste bomen heeft want daar is de leraar geweest. Selecteer de juiste kaartlaag (rechtsboven). Gebruik daarna de tool 'Bomenteller' om de bomen in elk gebied te tellen.",
+                    6: "Bijna klaar! Nu je de bomen hebt geteld, open je de 'Bomen Quiz' en beantwoord je de vraag: Hoeveel bomen staan er in het groene gebied waar de leraar is gezien?"
                 },
                 correctBounds: [
                     [51.9974075300547085, 4.3790828918529110],
