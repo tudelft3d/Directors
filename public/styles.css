@@ -7,7 +7,10 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    background: linear-gradient(135deg, #33ccff, #6699ff); /* Light blue to mid-blue gradient */
+    background-image: url('cover.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
 }
 
 h1 {
